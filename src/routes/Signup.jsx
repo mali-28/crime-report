@@ -1,35 +1,53 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import DialogBox from "../components/DialogBox";
+import { validatePhone } from "../utils/utils";
+
 
 const auth = getAuth();
 let recaptchaVerifier;
-
 const SignUp = () => {
-    const [input, setInput] = useState({
-        fname: "m",
-        lname: "ali",
-        phone: null,
-    })
+    const [phone, setPhone] = useState("");
+    const [open, setOpen] = useState(false);
+    const [errorTypePhone, setErrorTypePhone] = useState("");
+    const [valid, setValid] = useState("");
+    const [isChecked, setIsChecked] = useState(false);
 
-    const Event = ((e) => {
-        const { name, value } = e.target;
-
-        setInput((pre) => {
-            return { ...pre, [name]: value }
-        })
-    })
-
-
+  const handle = () => {
+    setOpen(pre=> !pre)
+  };
+  
     useEffect(() => {
         getRecaptcha();
     }, [])
 
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    useEffect(()=>{
+        
+    },[])
 
+    const Event = (e) =>{
+        const {value} = e.target;
+        setPhone(value)
+        const passError = validatePhone(value);
+
+        if(passError){
+            setErrorTypePhone(passError);
+            setValid("is-invalid")
+            console.log("passerror", passError)
+        }else{
+            setErrorTypePhone("");
+            setValid("is-valid")
+
+
+        }
+
+    }
+    console.log("erroe", errorTypePhone)
 
     const getRecaptcha = () => {
         try {
             recaptchaVerifier = new RecaptchaVerifier("recaptcha", {}, auth);
-            // console.log("window.recaptchaVerifier", recaptchaVerifier)
             recaptchaVerifier.render();
         } catch (e) {
             console.log("error", e)
@@ -37,9 +55,9 @@ const SignUp = () => {
     }
 
     const click = () => {
-        signInWithPhoneNumber(auth, "+" + input.phone, recaptchaVerifier).then(function (e) {
         
-
+        signInWithPhoneNumber(auth, "+" +phone, recaptchaVerifier).then(function (e) {
+        
 
             var code = prompt('shi shi', '');
 
@@ -48,8 +66,7 @@ const SignUp = () => {
 
 
             e.confirm(code).then(function (result) {
-                
-                document.querySelector('p').textContent += '성공 ' + result.user.phoneNumber;
+                handle();
 
             }).catch(function (error) {
                 console.error('error on msg confirmation', error);
@@ -66,30 +83,23 @@ const SignUp = () => {
     return <>
         <div className="my-5 mx-auto" style={{ width: "450px" }}>
             <div className="form-row ">
+                
                 <div className="mb-3">
-                    <label htmlFor="validationCustom01">First name</label>
-                    <input name="fname" onChange={Event} type="text" className="form-control vw-90" id="validationCustom01" placeholder="First name" value={input.fname} required />
-
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="validationCustom02">Last name</label>
-                    <input name="lname" onChange={Event} type="text" className="form-control" id="validationCustom02" placeholder="Last name" value={input.lname} required />
-
-                </div>
-                <div className=" mb-3">
                     <label htmlFor="validationCustomPhone">Phone</label>
-                    <input name="phone" onChange={Event} type="number" className="form-control" id="validationCustomPhone" placeholder="923****" value={input.phone} required />
-
+                    <input name="phone" onChange={Event} type="number" className={`form-control ${valid}`} id="validationCustomPhone" placeholder="923****" value={phone}/>
+                    <div className="invalid-feedback">{errorTypePhone}</div>
                 </div>
             </div>
             <div id="recaptcha" ></div>
 
             <button id="btn1"
+            disabled={!!errorTypePhone}
                 onClick={click}
-                className="btn btn-primary">Submit form</button>
-
+                className="btn btn-primary mt-2">Submit form</button>
         </div>
-        <p></p>
+        
+<button onClick={handle}>handle</button>
+        <DialogBox handle={handle} open={open}/>
     </>
 }
 

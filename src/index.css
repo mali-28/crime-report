@@ -86,6 +86,9 @@ button:focus {
   color: #ccc;
 }
 
+.invalid-feedback {
+  display: block !important;
+}
 @media (max-width : 990px){
   .small-hide{
     display: none;
