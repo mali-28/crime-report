@@ -1,6 +1,10 @@
-import React, {useState } from "react";
+import React, { useEffect, useState } from "react";
+import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 
-const Login = () => {
+const auth = getAuth();
+let recaptchaVerifier;
+
+const SignUp = () => {
     const [input, setInput] = useState({
         fname: "m",
         lname: "ali",
@@ -15,6 +19,50 @@ const Login = () => {
         })
     })
 
+
+    useEffect(() => {
+        getRecaptcha();
+    }, [])
+
+
+
+    const getRecaptcha = () => {
+        try {
+            recaptchaVerifier = new RecaptchaVerifier("recaptcha", {}, auth);
+            // console.log("window.recaptchaVerifier", recaptchaVerifier)
+            recaptchaVerifier.render();
+        } catch (e) {
+            console.log("error", e)
+        }
+    }
+
+    const click = () => {
+        signInWithPhoneNumber(auth, "+" + input.phone, recaptchaVerifier).then(function (e) {
+        
+
+
+            var code = prompt('shi shi', '');
+
+
+            if (code === null) return;
+
+
+            e.confirm(code).then(function (result) {
+                
+                document.querySelector('p').textContent += '성공 ' + result.user.phoneNumber;
+
+            }).catch(function (error) {
+                console.error('error on msg confirmation', error);
+
+            });
+
+        })
+            .catch(function (error) {
+                console.error('error on sign in method fail', error);
+
+            });
+
+    }
     return <>
         <div className="my-5 mx-auto" style={{ width: "450px" }}>
             <div className="form-row ">
@@ -36,10 +84,13 @@ const Login = () => {
             </div>
             <div id="recaptcha" ></div>
 
-            <button id="btn1" className="btn btn-primary">Submit form</button>
+            <button id="btn1"
+                onClick={click}
+                className="btn btn-primary">Submit form</button>
 
         </div>
+        <p></p>
     </>
 }
 
-export default Login;
+export default SignUp;
