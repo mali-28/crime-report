@@ -10,24 +10,25 @@ const auth = getAuth();
 let recaptchaVerifier;
 
 const SignUp = () => {
-    const {token,user,preUser} = useContext(AuthContext);
+    const {token,user,preUser,setPreUser} = useContext(AuthContext);
     const [phone, setPhone] = useState("");
     const [open, setOpen] = useState(false);
     const [errorTypePhone, setErrorTypePhone] = useState("");
     const [valid, setValid] = useState("");
-    const [isChecked, setIsChecked] = useState(false);
   
     useEffect(() => {
         getRecaptcha();
+        
     }, [])
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     useEffect(()=>{
-         if(preUser){
+        // setLocalStorage(localStorageKeys.preUser, {id: "id", phone : "phone", token : "token"})
+        const use = getLocalStorage(localStorageKeys.preUser)
+         if(use){
              setOpen(true);
          }
-        
-    },[preUser])
+    },[]);
 
     const handle = () => {
         setOpen(pre=> !pre)
@@ -78,6 +79,7 @@ const SignUp = () => {
                 handle();
                const res = result.user
                 setLocalStorage(localStorageKeys.preUser, {id : res.id, phone : res.phone, token : res.accessToken })
+                setPreUser(getLocalStorage(localStorageKeys.preUser))
             }).catch(function (error) {
                 console.error('error on msg confirmation', error);
 

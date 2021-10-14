@@ -1,9 +1,23 @@
 import Navbar from 'react-bootstrap/Navbar';
 import  "bootstrap/dist/css/bootstrap.min.css";
 import  "bootstrap/dist/js/bootstrap.bundle.js";
+import { useHistory } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
+import { removeLocalStorage } from '../utils/utils';
+import { localStorageKeys } from '../utils/constant';
+import { useContext } from 'react';
+import { AuthContext } from '../context/Auth';
+
+
 const Topbar = () =>{
-    return <nav className="navbar navbar-expand-lg navbar-light bg-light">
+  const history = useHistory()
+  // const {logout} = useContext(AuthContext)
+      function Logout(){
+        removeLocalStorage(localStorageKeys.user);
+        removeLocalStorage(localStorageKeys.token);
+        history.replace('/');
+      }
+  return <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container">
       <img className="logo" src="./images/logo1.jfif" alt="logo"/>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
@@ -19,7 +33,11 @@ const Topbar = () =>{
             <NavLink to="/about" activeClassName="active" className="nav-link">About</NavLink>
           </li> */}
           <li className="nav-item">
-            <NavLink  to="/login" activeClassName="active" className="nav-link">Login</NavLink>
+            <NavLink  to="/signup" activeClassName="active" className="nav-link">Signup</NavLink>
+          </li>
+
+          <li className="nav-item">
+            <button onClick={()=>{Logout()}}>Logout</button>
           </li>
         </ul>
         <form className="d-flex">

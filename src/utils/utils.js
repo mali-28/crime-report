@@ -22,7 +22,6 @@ export const validatePassword = (pass) => {
     return "";
 }
 
-
 export const validateName = (title,name) => {
     const value = typeof name === "string" ? name.trim() : "";
     if (!value) {
