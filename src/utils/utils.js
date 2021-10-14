@@ -32,3 +32,27 @@ export const validateName = (title,name) => {
     }
     return "";
 }
+
+
+export const setLocalStorage = (key,value)=>{
+     if(key && value){
+         localStorage.setItem(key, JSON.stringify(value))
+     }
+    
+}
+
+export const getLocalStorage = (key) =>{
+    if(key){
+        const data = localStorage.getItem(key);
+        if(data){
+            return JSON.parse(data);
+        }
+    }
+}
+
+export const removeLocalStorage = (key) =>{
+    if(key){
+        localStorage.removeItem(key)
+    }
+}
+ 

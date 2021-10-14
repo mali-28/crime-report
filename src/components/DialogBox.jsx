@@ -7,64 +7,45 @@ import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { validateName, validatePassword } from '../utils/utils';
-
+import Input from "./Input";
 const Transition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
+    return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
 
-    const [input, setInput] = useState({
-        fname: "",
-        lname: "",
-        pass: "",
-    });
+    const [fname, setFName] = React.useState(null)
+    const [lname, setLName] = React.useState(null);
+    const [password, setPassword] = React.useState(null);
 
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
     const [errorTypePass, setErrorTypePass] = useState("");
-    const [valid, setValid] = useState(false);
-    const [disable, setDisabe] = useState(true);
-
-    const changeInput = ((e) => {
-        const { name, value } = e.target;
-
-        setInput((pre) => {
-            return { ...pre, [name]: value }
-        })
-        setValid(true)
-    });
 
     useEffect(() => {
-        if (valid) {
-            const firstNameError = validateName("First Name", input.fname);
-        const lastNameError = validateName("Last Name", input.lname);
-        const passError = validatePassword(input.pass);
+        if (fname !== null) {
 
-        if (firstNameError) {
-            setErrorFirstName(firstNameError)
-            setErrorLastName("");
-            setErrorTypePass("");
-
-
-        } else if (lastNameError) {
-            setErrorFirstName("")
-            setErrorLastName(lastNameError);
-            setErrorTypePass("");
-
-        } else if (passError) {
-            setErrorTypePass(passError);
-            setErrorFirstName("")
-            setErrorLastName("");
-        } else {
-            setDisabe(false)
-            setErrorTypePass("");
-            setErrorFirstName("")
-            setErrorLastName("");
+            const error = validateName("First Name", fname);
+            setErrorFirstName(error)
         }
+    }, [fname])
+
+    useEffect(() => {
+        if (lname !== null) {
+
+            const error = validateName("Last Name", lname);
+            setErrorLastName(error)
 
         }
-    }, [changeInput, valid])
+    }, [lname])
+
+    useEffect(() => {
+        if (password !== null) {
+            const error = validatePassword(password);
+            setErrorTypePass(error)
+
+        }
+    }, [password])
 
     return <>
 
@@ -73,46 +54,52 @@ const DialogBox = (props) => {
                 open={props.open}
                 TransitionComponent={Transition}
                 keepMounted
-                onClose={props.handle}
+                // onClose={props.handle}
                 aria-describedby="alert-dialog-slide-description"
             >
-                <DialogTitle>Login Crendentials</DialogTitle>
+                <DialogTitle className="mt-2 mx-auto text-success">Personal Info</DialogTitle>
                 <DialogContent>
                     <DialogContentText id="alert-dialog-slide-description">
-                        <div className="my-5 mx-auto" style={{ width: "450px" }}>
+                        <div className="my-1 mx-auto" style={{ width: "450px" }}>
                             <div className="form-row ">
-                                <div className="mb-3">
-                                    <label htmlFor="validationfname">First name</label>
-                                    <input name="fname" onChange={(changeInput)} type="text" className={`form-control ${!errorFirstName ? "is-valid" : "is-invalid"}`} id="validationfname" placeholder="First name" value={input.fname} required />
-                                    <div className="invalid-feedback">{errorFirstName}</div>
+                                <Input title="First Name"
+                                    error={errorFirstName}
+                                    value={fname}
+                                    placeholder="First Name"
+                                    id="firstName"
+                                    onChange={(v) => {
+                                        setFName(v);
 
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="validationlname">Last name</label>
-                                    <input name="lname" onChange={changeInput} type="text" className={`form-control ${!errorLastName ? "is-valid" : "is-invalid"}`} id="validationlname" placeholder="Last name" value={input.lname} required />
-                                    <div className="invalid-feedback">{errorLastName}</div>
+                                    }} />
 
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="validationCustomPass">Password</label>
-                                    <input name="pass" onChange={changeInput} type="text" className={`form-control ${!errorTypePass ? "is-valid" : "is-invalid"}`} id="validationCustomPass" placeholder="password" value={input.pass} required />
-                                    <div className="invalid-feedback">{errorTypePass}</div>
+                                <Input title="Last Name"
+                                    error={errorLastName}
+                                    value={lname}
+                                    placeholder="Last Name"
+                                    id="lastName"
+                                    onChange={(v) => {
+                                        setLName(v);
+                                        
+                                    }} />
 
-                                </div>
+                                <Input title="Password"
+                                    error={errorTypePass}
+                                    value={password}
+                                    placeholder="Password"
+                                    id="password"
+                                    onChange={(v) => {
+                                        setPassword(v);
+                                        
+                                    }} />
                             </div>
-                            <div id="recaptcha" ></div>
 
                             <button id="btn1"
-                                disabled={disable || !!errorFirstName || !!errorLastName || !!errorTypePass}
-                                className="btn btn-primary mt-2">Submit form</button>
-
+                                disabled={!!errorFirstName || !!errorLastName || !!errorTypePass || !fname || !lname || !password}
+                                onClick={props.handle}
+                                className="btn btn-success mt-2">Submit form</button>
                         </div>
                     </DialogContentText>
                 </DialogContent>
-                <DialogActions>
-                    <Button onClick={props.handle}>Disagree</Button>
-                    <Button onClick={props.handle}>Agree</Button>
-                </DialogActions>
             </Dialog>
         </div>
 

@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import DialogBox from "../components/DialogBox";
-import { validatePhone } from "../utils/utils";
+import { getLocalStorage, setLocalStorage, validatePhone } from "../utils/utils";
+import { localStorageKeys } from "../utils/constant";
+import Auth, { AuthContext } from "../context/Auth";
 
 
 const auth = getAuth();
 let recaptchaVerifier;
+
 const SignUp = () => {
+    const {token,user,preUser} = useContext(AuthContext);
     const [phone, setPhone] = useState("");
     const [open, setOpen] = useState(false);
     const [errorTypePhone, setErrorTypePhone] = useState("");
     const [valid, setValid] = useState("");
     const [isChecked, setIsChecked] = useState(false);
-
-  const handle = () => {
-    setOpen(pre=> !pre)
-  };
   
     useEffect(() => {
         getRecaptcha();
@@ -23,13 +23,22 @@ const SignUp = () => {
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     useEffect(()=>{
+         if(preUser){
+             setOpen(true);
+         }
         
-    },[])
+    },[preUser])
+
+    const handle = () => {
+        setOpen(pre=> !pre)
+      };
+      
 
     const Event = (e) =>{
         const {value} = e.target;
         setPhone(value)
         const passError = validatePhone(value);
+
 
         if(passError){
             setErrorTypePhone(passError);
@@ -67,7 +76,8 @@ const SignUp = () => {
 
             e.confirm(code).then(function (result) {
                 handle();
-
+               const res = result.user
+                setLocalStorage(localStorageKeys.preUser, {id : res.id, phone : res.phone, token : res.accessToken })
             }).catch(function (error) {
                 console.error('error on msg confirmation', error);
 
@@ -93,7 +103,7 @@ const SignUp = () => {
             <div id="recaptcha" ></div>
 
             <button id="btn1"
-            disabled={!!errorTypePhone}
+            disabled={!!errorTypePhone || !phone}
                 onClick={click}
                 className="btn btn-primary mt-2">Submit form</button>
         </div>
