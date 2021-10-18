@@ -6,24 +6,23 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { removeLocalStorage, setLocalStorage, validateName, validatePassword } from '../utils/utils';
+import { removeLocalStorage, setLocalStorage, validateName,validateEmail, getLocalStorage } from '../utils/utils';
 import Input from "./Input";
-import  { AuthContext } from '../context/Auth';
+import { AuthContext } from '../context/Auth';
 import { localStorageKeys } from '../utils/constant';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
-    const {writeUserData,preUser} = useContext(AuthContext);
+    const { writeUserData, preUser,setToken,setUser } = useContext(AuthContext);
 
     const [fname, setFName] = React.useState(null)
     const [lname, setLName] = React.useState(null);
-    const [password, setPassword] = React.useState(null);
-
+    const [email, setEmail] = useState(null);
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
-    const [errorTypePass, setErrorTypePass] = useState("");
+    const [emailError, setEmailError] = useState("")
 
     useEffect(() => {
         if (fname !== null) {
@@ -42,24 +41,20 @@ const DialogBox = (props) => {
     }, [lname])
 
     useEffect(() => {
-        if (password !== null) {
-            const error = validatePassword(password);
-            setErrorTypePass(error)
+        if (email !== null) {
+            const error = validateEmail(email);
+            setEmailError(error)
 
         }
-    }, [password])
+    }, [email])
 
-    const info = () =>{
-        console.log("re",preUser)
-        if(preUser){
-            const {id, ...remaining} = preUser
-            writeUserData("users",id, {...remaining, fname, lname, password})
+    const info = () => {
+        if (preUser) {
+            const { id, token, phone } = preUser
+            writeUserData("users", id, { phone, token, fname, lname, email })
             removeLocalStorage(localStorageKeys.preUser);
-        
-
         }
         props.handle();
-
     }
 
     return <>
@@ -94,22 +89,25 @@ const DialogBox = (props) => {
                                     id="lastName"
                                     onChange={(v) => {
                                         setLName(v);
-                                        
+
                                     }} />
 
-                                <Input title="Password"
-                                    error={errorTypePass}
-                                    value={password}
-                                    placeholder="Password"
-                                    id="password"
+
+
+                                <Input title="Email"
+                                    type="email"
+                                    error={emailError}
+                                    value={email}
+                                    placeholder="Email"
+                                    id="email"
                                     onChange={(v) => {
-                                        setPassword(v);
-                                        
+                                        setEmail(v);
+
                                     }} />
                             </div>
 
                             <button id="btn1"
-                                disabled={!!errorFirstName || !!errorLastName || !!errorTypePass || !fname || !lname || !password}
+                                disabled={!!errorFirstName || !!errorLastName || !!emailError || !fname || !lname || !email}
                                 onClick={info}
                                 className="btn btn-success mt-2">Submit form</button>
                         </div>
