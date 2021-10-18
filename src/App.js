@@ -10,6 +10,7 @@ import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, cssTransition } from "react-toastify";
 import Applicant from "./routes/Applicant";
+import Index from "./context/Index";
 
 function App() {
   const bounce = cssTransition({
@@ -21,6 +22,7 @@ function App() {
       <BrowserRouter>
       <ToastContainer transition={bounce} />
       <Auth>
+        <Index>
       <Topbar />
         <Switch>
           <Route exact path="/">
@@ -38,6 +40,7 @@ function App() {
           <Redirect to="/"/>
         </Switch>
         <Footer/>
+        </Index>
         </Auth>
       </BrowserRouter>
     </>

@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
-import Input from "../components/Input";
-import { InputLabel, TextField, FormControl, MenuItem, Select, Button, Alert, FormHelperText } from '@mui/material';
+import { useContext, useEffect, useState } from "react";
+import { InputLabel, TextField, FormControl, MenuItem, Select, Button } from '@mui/material';
+import { getDatabase, ref, set, get, onChildAdded, child, onChildChanged } from "firebase/database";
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
-import { validateCnic, validateDes } from "../utils/utils";
+import { toCapitalize, validateCnic, validateDes } from "../utils/utils";
+import { AuthContext } from "../context/Auth";
+import { toast } from "react-toastify";
 
-// import TextField from 'material-ui/TextField';
+
 const Applicant = () => {
-
+    const db = getDatabase();
+    const { user, token } = useContext(AuthContext)
     const [city, setCity] = useState(cities?.[0].value)
     const [file, setFile] = useState(reports?.[0].value)
     const [cnic, setCnic] = useState(null)
@@ -15,8 +18,6 @@ const Applicant = () => {
     const [cnicError, setCnicError] = useState("")
     const [desError, setDesError] = useState("")
 
-    // console.log({cnic}, {"length": cnic?.length})
-    console.log({ des })
 
     useEffect(() => {
         if (cnic !== null) {
@@ -31,6 +32,28 @@ const Applicant = () => {
             setDesError(error)
         }
     }, [des])
+
+    const applicantSubmit = () => {
+        if (user && token) {
+            const id = `${new Date().getTime()}_${user.id}`;
+            set(ref(db, `application/${id}`), {
+                cnic,des,city, file, status : "pending", res: "", date : new Date().toDateString()
+            }).then(() => {
+                setCnic("");
+                setDes("");
+                setCnicError("")
+                setDesError("")
+                  toast.success(`${toCapitalize(user.fname) } ${toCapitalize(user.lname)} your request has been submitted!`);
+            })
+                .catch((error) => {
+                    toast.warning(error.message);
+
+                });
+        }
+
+
+    }
+
     return <>
         <div className="container my-5">
             <div className="row">
@@ -79,7 +102,7 @@ const Applicant = () => {
                             <NumberFormat onChange={e => setCnic(e.target.value)} value={cnic} className="col-md-12 col-12 mx-auto"
                                 error={!!cnicError}
                                 helperText={cnicError}
-                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" required />
+                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_"/>
                         </div>
                     </div>
                     <div className="row">
@@ -100,9 +123,9 @@ const Applicant = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="col-md-6 mb-5 mx-auto">
-                            <Button className="col-md-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >
-                               Send 
+                        <div className="col-md-6 col-6 mb-5 mx-auto">
+                            <Button onClick={applicantSubmit} className="col-md-12 col-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >
+                                Send
                             </Button>
                         </div>
                     </div>

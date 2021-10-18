@@ -71,6 +71,14 @@ export const setLocalStorage = (key,value)=>{
      }
     
 }
+export const toCapitalize = (val) =>{
+    if(val){
+        const name = val[0].toUpperCase() + val.slice(1,val.length)
+
+        return name;
+    }
+    return "";
+} 
 
 export const getLocalStorage = (key) =>{
     if(key){

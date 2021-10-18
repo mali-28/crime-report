@@ -1,6 +1,6 @@
 import React, { createContext, useEffect, useState } from "react";
 import { localStorageKeys } from "../utils/constant";
-import { getLocalStorage, removeLocalStorage, setLocalStorage } from "../utils/utils";
+import { getLocalStorage, setLocalStorage } from "../utils/utils";
 import { getDatabase, ref, set,get, onChildAdded,child, onChildChanged } from "firebase/database";
 import { toast } from "react-toastify";
 
@@ -26,7 +26,7 @@ const Auth = (props) => {
   const [userData, setUserData] = useState([]);
 
 
-console.log({userData})
+// console.log({userData})
   const writeUserData = (title, userId, data) => {
 
     set(ref(db, `${title}/` + userId), {
@@ -36,7 +36,6 @@ console.log({userData})
       setLocalStorage(localStorageKeys.token, token)
       setToken(getLocalStorage(localStorageKeys.token));
       setLocalStorage(localStorageKeys.user, {...remaining, id : userId})
-      console.log("f", remaining.fname)
       toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
     })
     .catch((error) => {
@@ -56,14 +55,13 @@ console.log({userData})
               const data = {...snaps[id], id}
               object.push(data)
             })
-            // console.log("snaps",snaps,snapshot.key)
             setUserData(object)
             
         } else {
           setUserData({})
         }
     }).catch((error) => {
-        console.error(error);
+      toast.danger(error);
     })
 
 }
@@ -74,14 +72,12 @@ useEffect(()=>{database()},[])
     onChildAdded(ref(db, '/users'), (snapshot) => {
       if (snapshot.exists()) {
         const newData = snapshot.val();
-        // console.log("Object.keys(snapshot)",Object.keys(snapshot))
-        // console.log("@snapshot@", snapshot.key ,{newData})
         setUserData((pre) => {
           return [ ...pre, {...newData, id : snapshot.key}]
         })
 
       } else {
-        console.log("No data available");
+        toast.danger("Some internal problem exists.Please try again later");
       }
     });
 
@@ -96,12 +92,10 @@ useEffect(()=>{database()},[])
               }
               return val
             })
-
-              // return [...pre, {...updatedData, id : key}]
           })
 
       } else {
-          console.log("No data available");
+        toast.danger("No data available. Please try again later");
       }
   });
 
