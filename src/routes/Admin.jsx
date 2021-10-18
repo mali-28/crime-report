@@ -68,11 +68,11 @@ const Admin = () => {
             {userData?.map((val) => {
               if (val.isAdmin && value) {
                 isData = true;
-                return <AdminTable key={val.id} color="error" val={val} title="Make User" onClick={() => { handleVerification(val.id) }} />
+                return <AdminTable key={val.id} color="error" val={val} title="Make User" onClick={(key) => { handleVerification(key) }} />
 
               } else if (!val.isAdmin && !value) {
                 isData = true;
-                return <AdminTable key={val.id} color="success" val={val} title="Make Admin" onClick={() => { handleVerification(val.id) }} />
+                return <AdminTable key={val.id} color="success" val={val} title="Make Admin" onClick={(key) => { handleVerification(key) }} />
               }
 
             })

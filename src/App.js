@@ -9,6 +9,7 @@ import Admin from "./routes/Admin";
 import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, cssTransition } from "react-toastify";
+import Applicant from "./routes/Applicant";
 
 function App() {
   const bounce = cssTransition({
@@ -30,6 +31,9 @@ function App() {
           </Route>
           <Route exact path="/admin">
             <Admin/>
+          </Route>
+          <Route exact path="/applicant">
+            <Applicant/>
           </Route>
           <Redirect to="/"/>
         </Switch>

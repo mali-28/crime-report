@@ -39,6 +39,10 @@ const Topbar = () =>{
           </li>
 
           <li className="nav-item">
+            <NavLink  to="/applicant" activeClassName="active" className="nav-link">Applicant</NavLink>
+          </li>
+
+          <li className="nav-item">
           <Button variant="text" onClick={()=>{Logout()}} color="success">Logout</Button>
           </li>
         </ul>
