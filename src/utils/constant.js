@@ -7,7 +7,7 @@ export const localStorageKeys = {
 export const regPass = /^[A-Za-z0-9-_@$]*$/;
 export const regName =  /[a-zA-Z]/;
 export const regEmail = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
-
+export const regCnic = /^\d{5}-\d{7}-\d{1}$/
 export const cities = [
     {value: "chicago"},
     {value: "atlanta"},

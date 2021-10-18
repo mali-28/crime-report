@@ -1,15 +1,36 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Input from "../components/Input";
-import { InputLabel, TextField, FormControl, MenuItem, Select, Alert } from '@mui/material';
+import { InputLabel, TextField, FormControl, MenuItem, Select, Button, Alert, FormHelperText } from '@mui/material';
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
+import { validateCnic, validateDes } from "../utils/utils";
+
 // import TextField from 'material-ui/TextField';
 const Applicant = () => {
 
     const [city, setCity] = useState(cities?.[0].value)
     const [file, setFile] = useState(reports?.[0].value)
+    const [cnic, setCnic] = useState(null)
+    const [des, setDes] = useState(null)
+    const [cnicError, setCnicError] = useState("")
+    const [desError, setDesError] = useState("")
 
+    // console.log({cnic}, {"length": cnic?.length})
+    console.log({ des })
 
+    useEffect(() => {
+        if (cnic !== null) {
+            const error = validateCnic(cnic)
+            setCnicError(error)
+        }
+    }, [cnic])
+
+    useEffect(() => {
+        if (des !== null) {
+            const error = validateDes(des)
+            setDesError(error)
+        }
+    }, [des])
     return <>
         <div className="container my-5">
             <div className="row">
@@ -24,7 +45,7 @@ const Applicant = () => {
                                     value={city}
                                     onChange={e => setCity(e.target.value)}
                                     label="City"
-                                    
+
 
                                 >
                                     {cities?.map((val, id) => {
@@ -55,7 +76,10 @@ const Applicant = () => {
                     </div>
                     <div className="row">
                         <div className="mb-3  col-md-9 col-10 mx-auto">
-                            <NumberFormat className="col-md-12 col-12 mx-auto" helperText="Please enter your cnic number"  id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" />
+                            <NumberFormat onChange={e => setCnic(e.target.value)} value={cnic} className="col-md-12 col-12 mx-auto"
+                                error={!!cnicError}
+                                helperText={cnicError}
+                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" required />
                         </div>
                     </div>
                     <div className="row">
@@ -63,20 +87,28 @@ const Applicant = () => {
                             <TextField
                                 id="standard-multiline-flexible"
                                 label="Your Report"
+                                error={!!desError}
                                 multiline
                                 maxRows={5}
-                                //   value={value}
-                                //   onChange={handleChange}
+                                value={des}
+                                onChange={e => setDes(e.target.value)}
                                 variant="standard"
                                 className="col-md-12 col-12 mx-auto "
-                                helperText="Enter your report description"
+                                helperText={desError}
                             />
 
                         </div>
                     </div>
-
+                    <div className="row">
+                        <div className="col-md-6 mb-5 mx-auto">
+                            <Button className="col-md-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >
+                               Send 
+                            </Button>
+                        </div>
+                    </div>
 
                 </div>
+
             </div>
         </div>
 
