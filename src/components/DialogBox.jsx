@@ -24,9 +24,8 @@ const DialogBox = (props) => {
 
     useEffect(() => {
         if (fname !== null) {
-
             const error = validateName("First Name", fname);
-            setErrorFirstName(error)
+           setErrorFirstName(error)
         }
     }, [fname])
 
@@ -42,7 +41,7 @@ const DialogBox = (props) => {
     useEffect(() => {
         if (password !== null) {
             const error = validatePassword(password);
-            setErrorTypePass(error)
+             setErrorTypePass(error)
 
         }
     }, [password])
@@ -67,30 +66,24 @@ const DialogBox = (props) => {
                                     value={fname}
                                     placeholder="First Name"
                                     id="firstName"
-                                    onChange={(v) => {
-                                        setFName(v);
-
-                                    }} />
+                                    onChange={setFName} 
+                                    />
 
                                 <Input title="Last Name"
                                     error={errorLastName}
                                     value={lname}
                                     placeholder="Last Name"
                                     id="lastName"
-                                    onChange={(v) => {
-                                        setLName(v);
-                                        
-                                    }} />
+                                    onChange={ setLName} 
+                                    />
 
                                 <Input title="Password"
                                     error={errorTypePass}
                                     value={password}
                                     placeholder="Password"
                                     id="password"
-                                    onChange={(v) => {
-                                        setPassword(v);
-                                        
-                                    }} />
+                                    onChange={setPassword} 
+                                    />
                             </div>
 
                             <button id="btn1"

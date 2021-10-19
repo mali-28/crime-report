@@ -10,12 +10,11 @@ const auth = getAuth();
 let recaptchaVerifier;
 
 const SignUp = () => {
-    const {token,user,preUser} = useContext(AuthContext);
+    const {token,user,preUser, setPreUser} = useContext(AuthContext);
     const [phone, setPhone] = useState("");
     const [open, setOpen] = useState(false);
     const [errorTypePhone, setErrorTypePhone] = useState("");
     const [valid, setValid] = useState("");
-    const [isChecked, setIsChecked] = useState(false);
   
     useEffect(() => {
         getRecaptcha();
@@ -23,6 +22,7 @@ const SignUp = () => {
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     useEffect(()=>{
+        
          if(preUser){
              setOpen(true);
          }
@@ -32,27 +32,20 @@ const SignUp = () => {
     const handle = () => {
         setOpen(pre=> !pre)
       };
-      
 
     const Event = (e) =>{
         const {value} = e.target;
         setPhone(value)
         const passError = validatePhone(value);
 
-
         if(passError){
             setErrorTypePhone(passError);
             setValid("is-invalid")
-            console.log("passerror", passError)
         }else{
             setErrorTypePhone("");
-            setValid("is-valid")
-
-
+            setValid("is-valid");
         }
-
     }
-    console.log("erroe", errorTypePhone)
 
     const getRecaptcha = () => {
         try {
@@ -66,10 +59,8 @@ const SignUp = () => {
     const click = () => {
         
         signInWithPhoneNumber(auth, "+" +phone, recaptchaVerifier).then(function (e) {
-        
 
             var code = prompt('shi shi', '');
-
 
             if (code === null) return;
 
@@ -79,14 +70,12 @@ const SignUp = () => {
                const res = result.user
                 setLocalStorage(localStorageKeys.preUser, {id : res.id, phone : res.phone, token : res.accessToken })
             }).catch(function (error) {
-                console.error('error on msg confirmation', error);
-
+                alert(error.message);
             });
 
         })
             .catch(function (error) {
-                console.error('error on sign in method fail', error);
-
+                alert(error.message);
             });
 
     }
