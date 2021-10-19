@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
-
+import Input from "../components/Input";
 const auth = getAuth();
 let recaptchaVerifier;
 
@@ -64,7 +64,10 @@ const SignUp = () => {
     }
     return <>
         <div className="my-5 mx-auto" style={{ width: "450px" }}>
-            <div className="form-row ">
+            <div className="form-row">
+                <Input name="fname" onChange={Event} title="First Name" value={input.fname}/>
+                <Input name="lname" onChange={Event} title="Last Name" value={input.lname}/>
+                <Input name="phone" onChange={Event} type="tel" title="Phone" value={input.phone}/>
                 <div className="mb-3">
                     <label htmlFor="validationCustom01">First name</label>
                     <input name="fname" onChange={Event} type="text" className="form-control vw-90" id="validationCustom01" placeholder="First name" value={input.fname} required />
