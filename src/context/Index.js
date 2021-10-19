@@ -1,43 +1,43 @@
-import { getDatabase, ref, set,get, onChildAdded,child, onChildChanged } from "firebase/database";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { getDatabase, ref, set, get, onChildAdded, child, onChildChanged } from "firebase/database";
 import { AuthContext } from "./Auth";
 import { toast } from "react-toastify";
 
 
 
 const content = {
-    writeData : () =>{},
+
 }
 
 const IndexContext = createContext(content);
 
-const Index = (props) =>{
-    const db = getDatabase();
-    const {user}  = useContext(AuthContext);
+const Index = (props) => {
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
+  const { user } = useContext(AuthContext);
+  const [applications, setApplications] = useState([]);
 
-    const writeData = (title, userId, data) => {
+  useEffect(() => {
 
-        set(ref(db, `${title}/` + "zbc"), {
-          ...data, isAdmin : false, isSuperAdmin : false
-        }).then(() => {
-        //   const { token, ...remaining } = data;
-        //   setLocalStorage(localStorageKeys.token, token)
-        //   setToken(getLocalStorage(localStorageKeys.token));
-        //   setLocalStorage(localStorageKeys.user, {...remaining, id : userId})
-        //   toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
-        })
-        .catch((error) => {
-          toast.danger(error.message);
-    
-        });
-       
+    get(child(dbRef, "application")).then((snapshot) => {
+      if (snapshot.exists()) {
+        const snap = snapshot.val();
+        console.log(snap);
+        console.log(Object.values(snap));
+      } else {
+        toast.error("No data available");
       }
-    
+    }).catch((error) => {
+      toast.error(error.message);
+    });
+  }, [])
 
 
-    return <><IndexContext.Provider value={{writeData}}>
+
+
+  return <><IndexContext.Provider value={{}}>
     {props.children}
   </IndexContext.Provider></>
 }
 export default Index;
-export {IndexContext};
+export { IndexContext };

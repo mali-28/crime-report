@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { InputLabel, TextField, FormControl, MenuItem, Select, Button } from '@mui/material';
-import { getDatabase, ref, set, get, onChildAdded, child, onChildChanged } from "firebase/database";
+import { getDatabase, ref, set,} from "firebase/database";
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
 import { toCapitalize, validateCnic, validateDes } from "../utils/utils";
