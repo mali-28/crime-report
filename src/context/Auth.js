@@ -40,12 +40,12 @@ const Auth = (props) => {
       let object = [];
         if (snapshot.exists()) {
             const snaps = snapshot.val();
-            Object.keys(snaps).forEach((id)=>{
-              console.log("val",id)
+            object  = Object.keys(snaps).map((id)=>{
+              // console.log("val",id, snaps)
               const data = {...snaps[id], id}
-              object.push(data)
+              return data;
             })
-            console.log("snaps",snaps,snapshot.key)
+            // console.log("snaps",snaps,snapshot.key)
             setUserData(object)
             
         } else {
@@ -56,9 +56,10 @@ const Auth = (props) => {
     })
 
 }
-useEffect(()=>{database()},[])
 
   useEffect(() => {
+    database();
+
 
     onChildAdded(ref(db, '/users'), (snapshot) => {
       if (snapshot.exists()) {
