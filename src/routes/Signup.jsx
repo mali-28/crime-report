@@ -6,8 +6,8 @@ let recaptchaVerifier;
 
 const SignUp = () => {
     const [input, setInput] = useState({
-        fname: "m",
-        lname: "ali",
+        fname: "",
+        lname: "",
         phone: null,
     })
 
@@ -29,10 +29,9 @@ const SignUp = () => {
     const getRecaptcha = () => {
         try {
             recaptchaVerifier = new RecaptchaVerifier("recaptcha", {}, auth);
-            // console.log("window.recaptchaVerifier", recaptchaVerifier)
             recaptchaVerifier.render();
         } catch (e) {
-            console.log("error", e)
+            alert("Internal Server Error exist. Please SignIn later")
         }
     }
 
@@ -41,7 +40,7 @@ const SignUp = () => {
         
 
 
-            var code = prompt('shi shi', '');
+            var code = prompt('Enter code that you recieved ', '');
 
 
             if (code === null) return;
@@ -49,7 +48,7 @@ const SignUp = () => {
 
             e.confirm(code).then(function (result) {
                 
-                document.querySelector('p').textContent += '성공 ' + result.user.phoneNumber;
+                alert("Thanks for signin")
 
             }).catch(function (error) {
                 console.error('error on msg confirmation', error);
