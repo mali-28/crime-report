@@ -21,7 +21,7 @@ const Topbar = () =>{
       }
   return <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container">
-      <img className="logo" src="./images/logo1.jfif" alt="logo"/>
+      <img className="logo" src="/images/logo1.jfif" alt="logo"/>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -43,7 +43,7 @@ const Topbar = () =>{
           </li>
 
           <li className="nav-item">
-            <NavLink  to="/request" activeClassName="active" className="nav-link">Request</NavLink>
+            <NavLink  to="/requests" activeClassName="active" className="nav-link">Request</NavLink>
           </li>
 
           <li className="nav-item">

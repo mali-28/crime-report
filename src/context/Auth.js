@@ -49,19 +49,19 @@ const Auth = (props) => {
     const dbRef = ref(getDatabase());
     get(child(dbRef, `users`)).then((snapshot) => {
       let object = [];
-        // if (snapshot.exists()) {
-        //     const snaps = snapshot.val();
-        //     Object.keys(,.  ).forEach((id)=>{
-        //       const data = {...snaps[id], id}
-        //       object.push(data)
-        //     })
-        //     setUserData(object)
+        if (snapshot.exists()) {
+            const snaps = snapshot.val();
+            object = Object.keys(snaps).map((id)=>{
+              const data = {...snaps[id], id}
+              return data;
+            })
+            setUserData(object)
             
-        // } else {
-        //   setUserData({})
-        // }
+        } else {
+          setUserData({})
+        }
     }).catch((error) => {
-      toast.danger(error);
+      toast.error(error);
     })
 
 }
@@ -77,7 +77,7 @@ useEffect(()=>{database()},[])
         })
 
       } else {
-        toast.danger("Some internal problem exists.Please try again later");
+        toast.error("Some internal problem exists.Please try again later");
       }
     });
 

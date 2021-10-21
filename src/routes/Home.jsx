@@ -11,7 +11,13 @@ const Home = () => {
   return (
       <>
       <Slider/>
-      <Cards/>
+      <div className="card-main">
+      <Cards title="Title1" style="one" icon="fas fa-code" des="Lorem Ipsum is simply dummy text of the printing and typesetting industry." text="code"/>
+      <Cards title="Title2" style="two" icon="fab fa-css3-alt" des="Lorem Ipsum is simply dummy text of the printing and typesetting industry." text="css3"/>
+      <Cards title="Title3" style="three" icon="fab fa-html5" des="Lorem Ipsum is simply dummy text of the printing and typesetting industry." text="html5"/>
+      <Cards title="Title4" style="four" icon="fab fa-js-square" des="Lorem Ipsum is simply dummy text of the printing and typesetting industry." text="js"/>
+      </div>
+      
     {/* <div className="App">
       <div className="card">
         <animated.div className="number">

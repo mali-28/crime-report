@@ -37,7 +37,7 @@ const Applicant = () => {
         if (user && token) {
             const id = `${new Date().getTime()}_${user.id}`;
             set(ref(db, `application/${id}`), {
-                cnic,des,city, file, status : "pending", res: "", date : new Date().toDateString()
+                cnic,des,city, file, status : "pending", res: ""
             }).then(() => {
                 setCnic("");
                 setDes("");

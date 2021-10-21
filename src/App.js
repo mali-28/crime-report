@@ -11,6 +11,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, cssTransition } from "react-toastify";
 import Applicant from "./routes/Applicant";
 import Request from "./routes/Request";
+import UserRequest from "./routes/UserRequest";
 import Index from "./context/Index";
 
 function App() {
@@ -39,8 +40,12 @@ function App() {
             <Applicant/>
           </Route>
 
-          <Route exact path="/request">
+          <Route exact path="/requests">
             <Request/>
+          </Route>
+
+          <Route exact path="/request/:id">
+            <UserRequest/>
           </Route>
           <Redirect to="/"/>
         </Switch>
