@@ -20,7 +20,7 @@ const Index = (props) => {
   const [appsData, setAppsData] = useState([]);
 
 
-  console.log({ appsData })
+  // console.log({ appsData })
   useEffect(() => {
 
     get(child(dbRef, "application")).then((snapshot) => {
@@ -32,7 +32,7 @@ const Index = (props) => {
           const time = dateObj.toLocaleTimeString();
           const date = dateObj.toDateString();
 
-          console.log({ data_Time: [time, date] })
+          // console.log({ data_Time: [time, date] })
           const userId = key?.split("_")[1]
           const applicant = userData?.find((val) => {
             return val.id === userId

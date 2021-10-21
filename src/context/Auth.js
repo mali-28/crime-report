@@ -26,7 +26,6 @@ const Auth = (props) => {
   const [userData, setUserData] = useState([]);
 
 
-// console.log({userData})
   const writeUserData = (title, userId, data) => {
 
     set(ref(db, `${title}/` + userId), {
@@ -61,7 +60,7 @@ const Auth = (props) => {
           setUserData({})
         }
     }).catch((error) => {
-      toast.error(error);
+      toast.error("Please Check your Connection");
     })
 
 }
@@ -77,7 +76,7 @@ useEffect(()=>{database()},[])
         })
 
       } else {
-        toast.error("Some internal problem exists.Please try again later");
+        toast.error("Some server problem exists.Please try again later");
       }
     });
 

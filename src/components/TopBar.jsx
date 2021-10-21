@@ -3,7 +3,7 @@ import  "bootstrap/dist/css/bootstrap.min.css";
 import  "bootstrap/dist/js/bootstrap.bundle.js";
 import { useHistory } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import {Select, Button,Stack} from '@mui/material';
+import {Button} from '@mui/material';
 
 import { removeLocalStorage } from '../utils/utils';
 import { localStorageKeys } from '../utils/constant';
@@ -47,8 +47,16 @@ const Topbar = () =>{
           </li>
 
           <li className="nav-item">
-          <Button variant="text" onClick={()=>{Logout()}} color="success">Logout</Button>
+            <NavLink  to="/myapplication" activeClassName="active" className="nav-link">Application</NavLink>
           </li>
+
+          <li className="nav-item">
+            <NavLink  to="/case" activeClassName="active" className="nav-link">Cases</NavLink>
+          </li>
+
+          {/* <li className="nav-item">
+          <Button variant="text" onClick={()=>{Logout()}} color="success">Logout</Button>
+          </li> */}
         </ul>
         <form className="d-flex">
           <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>

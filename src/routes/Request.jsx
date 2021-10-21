@@ -100,7 +100,6 @@ const Request = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {/* val.appId ,val.fname, val.lname,val.city, val.file, val.date */}
                     {tableData.map((val) => {
                         
                             {console.log({val})}

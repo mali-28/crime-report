@@ -46,7 +46,7 @@ const Applicant = () => {
                   toast.success(`${toCapitalize(user.fname) } ${toCapitalize(user.lname)} your request has been submitted!`);
             })
                 .catch((error) => {
-                    toast.warning(error.message);
+                    toast.warning("Server Error! Please try Again Later");
 
                 });
         }

@@ -10,9 +10,11 @@ import "animate.css/animate.min.css";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer, cssTransition } from "react-toastify";
 import Applicant from "./routes/Applicant";
+import MyApplication from "./routes/MyApplication";
 import Request from "./routes/Request";
 import UserRequest from "./routes/UserRequest";
 import Index from "./context/Index";
+import Case from "./routes/Case"
 
 function App() {
   const bounce = cssTransition({
@@ -42,6 +44,14 @@ function App() {
 
           <Route exact path="/requests">
             <Request/>
+          </Route>
+
+          <Route exact path="/myapplication">
+            <MyApplication/>
+          </Route>
+
+          <Route exact path="/case">
+            <Case/>
           </Route>
 
           <Route exact path="/request/:id">
