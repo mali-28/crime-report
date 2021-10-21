@@ -8,43 +8,46 @@ import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
 import { validateName, validatePassword } from '../utils/utils';
 import Input from "./Input";
+import * as yup from 'yup';
+
+import { fNameSchema, lNameSchema, passwordSchema } from '../utils/validation';
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
 
-    const [fname, setFName] = React.useState(null)
-    const [lname, setLName] = React.useState(null);
-    const [password, setPassword] = React.useState(null);
+    const [fname, setFName] = React.useState("")
+    const [lname, setLName] = React.useState("");
+    const [password, setPassword] = React.useState("");
 
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
     const [errorTypePass, setErrorTypePass] = useState("");
 
-    useEffect(() => {
-        if (fname !== null) {
-            const error = validateName("First Name", fname);
-           setErrorFirstName(error)
-        }
-    }, [fname])
+    // useEffect(() => {
+    //     if (fname !== null) {
+    //         const error = validateName("First Name", fname);
+    //        setErrorFirstName(error)
+    //     }
+    // }, [fname])
 
-    useEffect(() => {
-        if (lname !== null) {
+    // useEffect(() => {
+    //     if (lname !== null) {
 
-            const error = validateName("Last Name", lname);
-            setErrorLastName(error)
+    //         const error = validateName("Last Name", lname);
+    //         setErrorLastName(error)
 
-        }
-    }, [lname])
+    //     }
+    // }, [lname])
 
-    useEffect(() => {
-        if (password !== null) {
-            const error = validatePassword(password);
-             setErrorTypePass(error)
+    // useEffect(() => {
+    //     if (password !== null) {
+    //         const error = validatePassword(password);
+    //          setErrorTypePass(error)
 
-        }
-    }, [password])
+    //     }
+    // }, [password])
 
     return <>
 
@@ -66,24 +69,52 @@ const DialogBox = (props) => {
                                     value={fname}
                                     placeholder="First Name"
                                     id="firstName"
-                                    onChange={setFName} 
-                                    />
+                                    onChange={(e) => {
+                                        fNameSchema.validate({ firstName : e ,})
+                                            .then(setErrorFirstName(""))
+                                            .catch(function (err) {
+                                                setErrorFirstName(err.errors)
+                                                console.log(err.name); // => 'ValidationError'
+                                                console.log(err.errors); // => ['Deve ser maior que 18']
+                                            });
+                                        return setFName(e)
+                                    }}
+                                />
 
                                 <Input title="Last Name"
                                     error={errorLastName}
                                     value={lname}
                                     placeholder="Last Name"
                                     id="lastName"
-                                    onChange={ setLName} 
-                                    />
+                                    onChange={(e) => {
+                                        lNameSchema.validate({ lastName : e ,})
+                                            .then(setErrorLastName(""))
+                                            .catch(function (err) {
+                                                setErrorLastName(err.errors)
+                                                console.log(err.name); // => 'ValidationError'
+                                                console.log(err.errors); // => ['Deve ser maior que 18']
+                                            });
+
+                                        return setLName(e)
+                                    }}
+                                />
 
                                 <Input title="Password"
                                     error={errorTypePass}
                                     value={password}
                                     placeholder="Password"
                                     id="password"
-                                    onChange={setPassword} 
-                                    />
+                                    onChange={(e) => {
+                                        passwordSchema.validate({ password: e ,})
+                                            .then(setErrorTypePass(""))
+                                            .catch(function (err) {
+                                                setErrorTypePass(err.errors)
+                                                console.log(err.name); // => 'ValidationError'
+                                                console.log(err.errors); // => ['Deve ser maior que 18']
+                                            });
+                                        return setPassword(e)
+                                    }}
+                                />
                             </div>
 
                             <button id="btn1"
