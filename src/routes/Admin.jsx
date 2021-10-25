@@ -1,18 +1,21 @@
 import React, { useContext, useState, useEffect } from "react"
 import { getDatabase, ref, set, get, child } from "firebase/database";
-import {InputLabel,MenuItem,FormControl,Select, Alert } from '@mui/material';
+import { InputLabel, MenuItem, FormControl, Select, Alert } from '@mui/material';
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/Auth";
-import Table from "../tables/AdminTable"
+import Table from "../tables/AdminTable";
 import "../css/admin.css";
 
 const Admin = () => {
+
   const { user, token, userData } = useContext(AuthContext);
   const [value, setValue] = useState(true);
   let isData = false;
+
   const history = useHistory();
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+
   useEffect(() => {
     if (!user || !token) {
       history.replace("/signin");
@@ -70,7 +73,7 @@ const Admin = () => {
                   {userData?.map((val) => {
                     if (val.isAdmin && value) {
                       isData = true;
-                      return <Table key={val.id}  color="error" val={val} title="Make User" onClick={handleVerification} />
+                      return <Table key={val.id} color="error" val={val} title="Make User" onClick={handleVerification} />
 
                     } else if (!val.isAdmin && !value) {
                       isData = true;
@@ -83,11 +86,11 @@ const Admin = () => {
 
 
                 </tbody>
-                </table>
-                </div>
-                </div>
-                </div>
-                </div>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
 
   </>

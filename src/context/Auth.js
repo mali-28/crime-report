@@ -13,7 +13,6 @@ const obj = {
   setPreUser: () => { },
   userData: [],
   setUserData: () => { },
-  writeUserData: () => { },
 }
 
 
@@ -26,23 +25,7 @@ const Auth = (props) => {
   const [userData, setUserData] = useState([]);
 
 
-  const writeUserData = (title, userId, data) => {
 
-    set(ref(db, `${title}/` + userId), {
-      ...data, isAdmin : false, isSuperAdmin : false
-    }).then(() => {
-      const { token, ...remaining } = data;
-      setLocalStorage(localStorageKeys.token, token)
-      setToken(getLocalStorage(localStorageKeys.token));
-      setLocalStorage(localStorageKeys.user, {...remaining, id : userId})
-      toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
-    })
-    .catch((error) => {
-      toast.danger(error.message);
-
-    });
-   
-  }
 
   const database =  () =>{
     const dbRef = ref(getDatabase());
@@ -64,9 +47,10 @@ const Auth = (props) => {
     })
 
 }
-useEffect(()=>{database()},[])
 
   useEffect(() => {
+    
+    database();
 
     onChildAdded(ref(db, '/users'), (snapshot) => {
       if (snapshot.exists()) {
@@ -100,7 +84,7 @@ useEffect(()=>{database()},[])
 
   }, [])
 
-  return <><AuthContext.Provider value={{token, setToken, user, setUser, preUser, setPreUser, writeUserData,userData }}>
+  return <><AuthContext.Provider value={{token, setToken, user, setUser, preUser, setPreUser,userData }}>
     {props.children}
   </AuthContext.Provider></>
 

@@ -1,54 +1,53 @@
-import React, { useContext, useEffect, useState } from 'react';
-
-import {Dialog,DialogActions,DialogContent,DialogContentText,DialogTitle,Slide} from '@mui/material';
-
-import { removeLocalStorage, setLocalStorage, validateName,validateEmail, getLocalStorage } from '../utils/utils';
+import React, { useContext, useState } from 'react';
+import { getDatabase, ref, set } from "firebase/database";
+import { Dialog, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
+import { toast } from "react-toastify";
+import { removeLocalStorage, setLocalStorage, getLocalStorage, validateInput } from '../utils/utils';
 import Input from "./Input";
 import { AuthContext } from '../context/Auth';
 import { localStorageKeys } from '../utils/constant';
+import { fNameSchema, lNameSchema, emailSchema } from '../utils/validation';
+
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
-    const { writeUserData, preUser,setToken,setUser } = useContext(AuthContext);
-
-    const [fname, setFName] = React.useState(null)
-    const [lname, setLName] = React.useState(null);
-    const [email, setEmail] = useState(null);
+    const { preUser, setToken, setUser } = useContext(AuthContext);
+    const db = getDatabase();
+    const [fname, setFName] = React.useState("")
+    const [lname, setLName] = React.useState("");
+    const [email, setEmail] = useState("");
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
     const [emailError, setEmailError] = useState("")
 
-    useEffect(() => {
-        if (fname !== null) {
-
-            const error = validateName("First Name", fname);
-            setErrorFirstName(error)
-        }
-    }, [fname])
-
-    useEffect(() => {
-        if (lname !== null) {
-
-            const error = validateName("Last Name", lname);
-            setErrorLastName(error)
-        }
-    }, [lname])
-
-    useEffect(() => {
-        if (email !== null) {
-            const error = validateEmail(email);
-            setEmailError(error)
-
-        }
-    }, [email])
 
     const info = () => {
         if (preUser) {
-            const { id, token, phone } = preUser
-            writeUserData("users", id, { phone, token, fname, lname, email })
-            removeLocalStorage(localStorageKeys.preUser);
+            console.log({preUser})
+            const { id, token, phone } = preUser;
+            const data = { phone, token, fname, lname, email }
+
+            set(ref(db, `users/` + id), {
+                ...data, isAdmin: false, isSuperAdmin: false
+            }).then(() => {
+
+                const { token, ...remaining } = data;
+                setLocalStorage(localStorageKeys.token, token)
+                setToken(getLocalStorage(localStorageKeys.token));
+                setLocalStorage(localStorageKeys.user, { ...remaining, id })
+                setUser(getLocalStorage(localStorageKeys.user))
+                toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
+                removeLocalStorage(localStorageKeys.preUser);
+
+            })
+                .catch((error) => {
+                    toast.danger(error.message);
+
+                });
+
         }
         props.handle();
     }
@@ -74,6 +73,7 @@ const DialogBox = (props) => {
                                     placeholder="First Name"
                                     id="firstName"
                                     onChange={(v) => {
+                                        validateInput(fNameSchema, "firstName", v, setErrorFirstName)
                                         setFName(v);
 
                                     }} />
@@ -84,6 +84,7 @@ const DialogBox = (props) => {
                                     placeholder="Last Name"
                                     id="lastName"
                                     onChange={(v) => {
+                                        validateInput(lNameSchema, "lastName", v, setErrorLastName)
                                         setLName(v);
 
                                     }} />
@@ -97,6 +98,7 @@ const DialogBox = (props) => {
                                     placeholder="Email"
                                     id="email"
                                     onChange={(v) => {
+                                        validateInput(emailSchema, "email", v, setEmailError)
                                         setEmail(v);
 
                                     }} />

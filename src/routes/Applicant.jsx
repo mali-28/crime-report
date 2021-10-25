@@ -54,7 +54,7 @@ const Applicant = () => {
 
 
     }
-    console.log({ image })
+    // console.log({ image : URL?.createObjectURL(image) })
 
     return <>
         <div className="container my-5">
@@ -124,7 +124,17 @@ const Applicant = () => {
 
                         </div>
                     </div>
-
+                    {/* <input type="file" accept="image/*"
+                     onChange={(e)=>{
+                         setImage(e.target.files[0])
+                         console.log(e.target.files)
+                     }
+                     } />
+                     {image? 
+                     <img src={URL.createObjectURL(image)} alt="" width="138" /> : 
+                     <></>
+                     
+                    } */}
 
                     <div className="row">
                         <div className="col-md-6 col-6 mb-5 mx-auto">
