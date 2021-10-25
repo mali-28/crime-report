@@ -7,20 +7,28 @@ import { Select, Alert } from '@mui/material';
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/Auth";
 import AdminTable from "../components/AdminTable";
+
+
 const Admin = () => {
+
   const { user, token, userData } = useContext(AuthContext);
-  const [value, setValue] = useState(true);
-  let isData = false;
   const history = useHistory();
   const db = getDatabase();
   const dbRef = ref(getDatabase());
+  const [value, setValue] = useState(true);
+  let isData = false;
+
+
   useEffect(() => {
     if (!user || !token) {
       history.replace("/signin");
     }
   }, [user, token])
 
+
+
   const handleVerification = (id) => {
+
     get(child(dbRef, `users/${id}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const user = snapshot.val();
@@ -31,13 +39,15 @@ const Admin = () => {
         console.log("No data available");
       }
     }).catch((error) => {
-      console.error(error);
+      console.error(error.message);
     });
 
   }
 
+  
   return <>
     <div className="container my-4">
+
       <FormControl variant="standard" sx={{ m: "10 auto", minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">Admin</InputLabel>
         <Select
@@ -51,6 +61,7 @@ const Admin = () => {
           <MenuItem value={false}>Pending </MenuItem>
         </Select>
       </FormControl>
+
       <div className="table-responsive ">
         <table className="table ">
           <thead>
