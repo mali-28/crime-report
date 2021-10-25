@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { InputLabel, TextField, FormControl, MenuItem, Select, Button } from '@mui/material';
-import { getDatabase, ref, set,} from "firebase/database";
+import { getDatabase, ref, set, } from "firebase/database";
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
 import { toCapitalize, validateCnic, validateDes } from "../utils/utils";
@@ -15,6 +15,7 @@ const Applicant = () => {
     const [file, setFile] = useState(reports?.[0].value)
     const [cnic, setCnic] = useState(null)
     const [des, setDes] = useState(null)
+    const [image, setImage] = useState("")
     const [cnicError, setCnicError] = useState("")
     const [desError, setDesError] = useState("")
 
@@ -37,13 +38,13 @@ const Applicant = () => {
         if (user && token) {
             const id = `${new Date().getTime()}_${user.id}`;
             set(ref(db, `application/${id}`), {
-                cnic,des,city, file, status : "pending", res: ""
+                cnic, des, city, file, status: "pending", res: ""
             }).then(() => {
                 setCnic("");
                 setDes("");
                 setCnicError("")
                 setDesError("")
-                  toast.success(`${toCapitalize(user.fname) } ${toCapitalize(user.lname)} your request has been submitted!`);
+                toast.success(`${toCapitalize(user.fname)} ${toCapitalize(user.lname)} your request has been submitted!`);
             })
                 .catch((error) => {
                     toast.warning("Server Error! Please try Again Later");
@@ -53,6 +54,7 @@ const Applicant = () => {
 
 
     }
+    console.log({ image })
 
     return <>
         <div className="container my-5">
@@ -102,7 +104,7 @@ const Applicant = () => {
                             <NumberFormat onChange={e => setCnic(e.target.value)} value={cnic} className="col-md-12 col-12 mx-auto"
                                 error={!!cnicError}
                                 helperText={cnicError}
-                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_"/>
+                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" />
                         </div>
                     </div>
                     <div className="row">
@@ -122,6 +124,8 @@ const Applicant = () => {
 
                         </div>
                     </div>
+
+
                     <div className="row">
                         <div className="col-md-6 col-6 mb-5 mx-auto">
                             <Button onClick={applicantSubmit} className="col-md-12 col-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >

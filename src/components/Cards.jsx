@@ -1,4 +1,3 @@
-import { NavLink } from "react-router-dom";
 import "./card.css"
 const Cards = (props) => {
     return <>
@@ -10,7 +9,7 @@ const Cards = (props) => {
             <div className="card-content">
                 <h1 className="card-title">{props.title}</h1>
                 <p className="card-text">{props.des}</p>
-                <NavLink to={`/${props.text}`} ><button className={`card-btn  ${props.style}`}>{props.text}</button></NavLink>
+                <button className={`card-btn  ${props.style}`}>{props.text}</button>
             </div>
         </div>
         
