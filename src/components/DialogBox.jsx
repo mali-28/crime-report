@@ -6,9 +6,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { validateName, validatePassword } from '../utils/utils';
+import { validateName, validatePassword ,validateInput} from '../utils/utils';
 import Input from "./Input";
-import * as yup from 'yup';
 
 import { fNameSchema, lNameSchema, passwordSchema } from '../utils/validation';
 const Transition = React.forwardRef(function Transition(props, ref) {
@@ -70,13 +69,7 @@ const DialogBox = (props) => {
                                     placeholder="First Name"
                                     id="firstName"
                                     onChange={(e) => {
-                                        fNameSchema.validate({ firstName : e ,})
-                                            .then(setErrorFirstName(""))
-                                            .catch(function (err) {
-                                                setErrorFirstName(err.errors)
-                                                console.log(err.name); // => 'ValidationError'
-                                                console.log(err.errors); // => ['Deve ser maior que 18']
-                                            });
+                                        validateInput(fNameSchema, "firstName", e, setErrorFirstName)
                                         return setFName(e)
                                     }}
                                 />
@@ -87,14 +80,7 @@ const DialogBox = (props) => {
                                     placeholder="Last Name"
                                     id="lastName"
                                     onChange={(e) => {
-                                        lNameSchema.validate({ lastName : e ,})
-                                            .then(setErrorLastName(""))
-                                            .catch(function (err) {
-                                                setErrorLastName(err.errors)
-                                                console.log(err.name); // => 'ValidationError'
-                                                console.log(err.errors); // => ['Deve ser maior que 18']
-                                            });
-
+                                        validateInput(lNameSchema, "lastName", e, setErrorLastName)
                                         return setLName(e)
                                     }}
                                 />
@@ -105,13 +91,7 @@ const DialogBox = (props) => {
                                     placeholder="Password"
                                     id="password"
                                     onChange={(e) => {
-                                        passwordSchema.validate({ password: e ,})
-                                            .then(setErrorTypePass(""))
-                                            .catch(function (err) {
-                                                setErrorTypePass(err.errors)
-                                                console.log(err.name); // => 'ValidationError'
-                                                console.log(err.errors); // => ['Deve ser maior que 18']
-                                            });
+                                        validateInput(passwordSchema, "password", e, setErrorTypePass)
                                         return setPassword(e)
                                     }}
                                 />

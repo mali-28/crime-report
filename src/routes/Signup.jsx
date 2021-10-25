@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import DialogBox from "../components/DialogBox";
-import { getLocalStorage, setLocalStorage, validatePhone } from "../utils/utils";
+import { getLocalStorage, setLocalStorage, validatePhone, confirmSignIn } from "../utils/utils";
 import { localStorageKeys } from "../utils/constant";
 import Auth, { AuthContext } from "../context/Auth";
 
@@ -10,38 +10,38 @@ const auth = getAuth();
 let recaptchaVerifier;
 
 const SignUp = () => {
-    const {token,user,preUser, setPreUser} = useContext(AuthContext);
+    const { token, user, preUser, setPreUser } = useContext(AuthContext);
     const [phone, setPhone] = useState("");
     const [open, setOpen] = useState(false);
     const [errorTypePhone, setErrorTypePhone] = useState("");
     const [valid, setValid] = useState("");
-  
+
     useEffect(() => {
         getRecaptcha();
     }, [])
 
     // Example starter JavaScript for disabling form submissions if there are invalid fields
-    useEffect(()=>{
-        
-         if(preUser){
-             setOpen(true);
-         }
-        
-    },[preUser])
+    useEffect(() => {
+
+        if (preUser) {
+            setOpen(true);
+        }
+
+    }, [preUser])
 
     const handle = () => {
-        setOpen(pre=> !pre)
-      };
+        setOpen(pre => !pre)
+    };
 
-    const Event = (e) =>{
-        const {value} = e.target;
+    const Event = (e) => {
+        const { value } = e.target;
         setPhone(value)
         const passError = validatePhone(value);
 
-        if(passError){
+        if (passError) {
             setErrorTypePhone(passError);
             setValid("is-invalid")
-        }else{
+        } else {
             setErrorTypePhone("");
             setValid("is-valid");
         }
@@ -57,21 +57,16 @@ const SignUp = () => {
     }
 
     const click = () => {
-        
-        signInWithPhoneNumber(auth, "+" +phone, recaptchaVerifier).then(function (e) {
+
+        signInWithPhoneNumber(auth, "+" + phone, recaptchaVerifier).then(function (e) {
 
             var code = prompt('shi shi', '');
 
             if (code === null) return;
+ 
+            confirmSignIn(e,code, handle, setLocalStorage, localStorageKeys);
 
-
-            e.confirm(code).then(function (result) {
-                handle();
-               const res = result.user
-                setLocalStorage(localStorageKeys.preUser, {id : res.id, phone : res.phone, token : res.accessToken })
-            }).catch(function (error) {
-                alert(error.message);
-            });
+            
 
         })
             .catch(function (error) {
@@ -82,23 +77,23 @@ const SignUp = () => {
     return <>
         <div className="my-5 mx-auto" style={{ width: "450px" }}>
             <div className="form-row ">
-                
+
                 <div className="mb-3">
                     <label htmlFor="validationCustomPhone">Phone</label>
-                    <input name="phone" onChange={Event} type="number" className={`form-control ${valid}`} id="validationCustomPhone" placeholder="923****" value={phone}/>
+                    <input name="phone" onChange={Event} type="number" className={`form-control ${valid}`} id="validationCustomPhone" placeholder="923****" value={phone} />
                     <div className="invalid-feedback">{errorTypePhone}</div>
                 </div>
             </div>
             <div id="recaptcha" ></div>
 
             <button id="btn1"
-            disabled={!!errorTypePhone || !phone}
+                disabled={!!errorTypePhone || !phone}
                 onClick={click}
                 className="btn btn-primary mt-2">Submit form</button>
         </div>
-        
-<button onClick={handle}>handle</button>
-        <DialogBox handle={handle} open={open}/>
+
+        <button onClick={handle}>handle</button>
+        <DialogBox handle={handle} open={open} />
     </>
 }
 

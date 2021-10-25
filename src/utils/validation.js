@@ -2,7 +2,7 @@ import * as yup from 'yup';
 
 export const fNameSchema = yup.object().shape({
     firstName: yup.string()
-        .required("Firstname is required"),
+        .required("First Name is required"),
 
 
 });
@@ -10,7 +10,7 @@ export const fNameSchema = yup.object().shape({
 export const lNameSchema = yup.object().shape({
 
     lastName: yup.string()
-        .required("Lastname is required"),
+        .required("Last Name is required"),
 
 
 
