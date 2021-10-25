@@ -28,39 +28,7 @@ const MyApplication = () => {
         }
     }, [user, appsData])
     return <>
-        {/* <div className="container bootstrap snippets bootdey font-013">
-            <div className="row mb-5">
-                <div className="row my-5 d-flex justify-content-evenly mx-auto ">
-
-                    {myApplication?.map((val) => {
-                        return <div key={val.appId} className="col-md-6 col-10 mt-5 col-10 ">
-                            <div className="row">
-                                <div className="col-md-10 col-12  bg-light br-015 p-3 mx-auto">
-                                    <div className="panel ">
-                                        <div className="panel-body">
-                                            <div className="bio-chart">
-                                                <div><input className="knob side-title" /></div>
-                                            </div>
-                                            <div className="bio-desk">
-                                            <h4 className="red text-capitalize">Name : {val.fname} {val.lname}</h4>
-                                                <h4 className="red text-capitalize">Type : {val.file}</h4>
-                                                <p>Date : {val.date}</p>
-                                                <p> Time : {val.time}</p>
-                                                <p> Description : {val.des}</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-                    })}
-
-
-                </div>
-            </div>
-        </div> */}
-
+       
 
         <div className="container ">
             <div className="row">

@@ -26,6 +26,17 @@ export const emailSchema = yup.object().shape({
 
 });
 
+export const cnicSchema = yup.object().shape({
+
+    cnic: yup.string()
+        .required("cnic is required")
+        .matches(/^\d{5}-\d{7}-\d{1}$/, {
+            message:'Cnic number must follow the xxxxx-xxxxxxx-x format',
+            excludeEmptyString: true
+        })
+
+});
+
 
 export const passwordSchema = yup.object().shape({
 
@@ -35,3 +46,22 @@ export const passwordSchema = yup.object().shape({
 
 
 });
+
+export const desSchema = yup.object().shape({
+
+    description: yup.string()
+        .required("Description is required")
+        .min(30, "Description is too short - should be 30 chars minimum"),
+
+
+});
+
+export const phoneSchema = yup.object().shape({
+
+    phone: yup.string()
+        .required("Phone Number is required")
+        .min(3, "Description is too short - should be 3 chars minimum"),
+
+
+});
+

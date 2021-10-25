@@ -17,7 +17,7 @@ const Request = () => {
     "Last Title",
     "City",
     "Case",
-    "Date",
+    "Status",
     {
       name: "Actions",
       options: {

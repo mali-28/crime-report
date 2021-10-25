@@ -3,12 +3,13 @@ import { useHistory } from "react-router-dom";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { getDatabase, ref, set, get, onChildAdded, child } from "firebase/database";
 import { toast } from "react-toastify";
-import{ AuthContext } from "../context/Auth";
+import { AuthContext } from "../context/Auth";
 import { localStorageKeys } from "../utils/constant";
-import { getLocalStorage, setLocalStorage, validatePhone } from "../utils/utils";
+import { getLocalStorage, setLocalStorage, validateInput, validatePhone } from "../utils/utils";
 import { confirmSignIn } from "../features/signin";
 import DialogBox from "../components/DialogBox";
-
+import { phoneSchema } from "../utils/validation";
+import Input from "../components/Input";
 
 const auth = getAuth();
 let recaptchaVerifier;
@@ -18,7 +19,6 @@ const SignUp = () => {
     const [phone, setPhone] = useState("");
     const [open, setOpen] = useState(false);
     const [errorTypePhone, setErrorTypePhone] = useState("");
-    const [valid, setValid] = useState("");
     const history = useHistory();
     const dbRef = ref(getDatabase());
 
@@ -26,7 +26,6 @@ const SignUp = () => {
         getRecaptcha();
 
     }, [])
-
     // Example starter JavaScript for disabling form submissions if there are invalid fields
     useEffect(() => {
         // setLocalStorage(localStorageKeys.preUser, { id: "id1", phone: "phone1", token: "token1" })
@@ -40,21 +39,7 @@ const SignUp = () => {
         setOpen(pre => !pre)
     };
 
-    const Event = (e) => {
-        const { value } = e.target;
-        setPhone(value)
-        const error = validatePhone(value);
-
-
-        if (error) {
-            setErrorTypePhone(error);
-            setValid("is-invalid")
-        } else {
-            setErrorTypePhone("");
-            setValid("is-valid")
-        }
-
-    }
+   
 
     const getRecaptcha = () => {
         try {
@@ -83,13 +68,13 @@ const SignUp = () => {
 
 
             }).catch(function (error) {
-                toast.error('error on msg confirmation!! ', error.message);
+                toast.error('error on msg confirmation!! ', error);
 
             });
 
         })
             .catch(function (error) {
-                toast.error('error on sign in method fail!! ', error.message);
+                toast.error('error on sign in method fail!! ', error);
 
             });
 
@@ -97,14 +82,20 @@ const SignUp = () => {
     return <>
         <div className="my-5 mx-auto" style={{ width: "450px" }}>
             <div className="form-row ">
+                <Input title="Phone"
+                    type="number"
+                    error={errorTypePhone}
+                    value={phone}
+                    placeholder="923***"
+                    id="phone"
+                    onChange={(v) => {
+                        validateInput(phoneSchema, "phone", v, setErrorTypePhone)
+                        setPhone(v);
 
-                <div className="mb-3">
-                    <label htmlFor="validationCustomPhone">Phone</label>
-                    <input name="phone" onChange={Event} type="number" className={`form-control ${valid}`} id="validationCustomPhone" placeholder="923****" value={phone} />
-                    <div className="invalid-feedback">{errorTypePhone}</div>
-                </div>
+                    }} />
+
             </div>
-            <div id="recaptcha" ></div>
+            <div id="recaptcha"></div>
 
             <button id="btn1"
                 disabled={!!errorTypePhone || !phone}

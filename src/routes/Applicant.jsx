@@ -3,9 +3,10 @@ import { InputLabel, TextField, FormControl, MenuItem, Select, Button } from '@m
 import { getDatabase, ref, set, } from "firebase/database";
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
-import { toCapitalize, validateCnic, validateDes } from "../utils/utils";
+import { toCapitalize, validateInput } from "../utils/utils";
 import { AuthContext } from "../context/Auth";
 import { toast } from "react-toastify";
+import { cnicSchema, desSchema } from "../utils/validation";
 
 
 const Applicant = () => {
@@ -13,26 +14,13 @@ const Applicant = () => {
     const { user, token } = useContext(AuthContext)
     const [city, setCity] = useState(cities?.[0].value)
     const [file, setFile] = useState(reports?.[0].value)
-    const [cnic, setCnic] = useState(null)
-    const [des, setDes] = useState(null)
+    const [cnic, setCnic] = useState("")
+    const [des, setDes] = useState("")
     const [image, setImage] = useState("")
     const [cnicError, setCnicError] = useState("")
     const [desError, setDesError] = useState("")
 
 
-    useEffect(() => {
-        if (cnic !== null) {
-            const error = validateCnic(cnic)
-            setCnicError(error)
-        }
-    }, [cnic])
-
-    useEffect(() => {
-        if (des !== null) {
-            const error = validateDes(des)
-            setDesError(error)
-        }
-    }, [des])
 
     const applicantSubmit = () => {
         if (user && token) {
@@ -47,6 +35,7 @@ const Applicant = () => {
                 toast.success(`${toCapitalize(user.fname)} ${toCapitalize(user.lname)} your request has been submitted!`);
             })
                 .catch((error) => {
+                    // console.log({error})
                     toast.warning("Server Error! Please try Again Later");
 
                 });
@@ -54,6 +43,7 @@ const Applicant = () => {
 
 
     }
+
     // console.log({ image : URL?.createObjectURL(image) })
 
     return <>
@@ -101,7 +91,10 @@ const Applicant = () => {
                     </div>
                     <div className="row">
                         <div className="mb-3  col-md-9 col-10 mx-auto">
-                            <NumberFormat onChange={e => setCnic(e.target.value)} value={cnic} className="col-md-12 col-12 mx-auto"
+                            <NumberFormat onChange={(e) => {
+                                validateInput(cnicSchema, "cnic", e.target.value, setCnicError)
+                                setCnic(e.target.value)
+                            }} value={cnic} className="col-md-12 col-12 mx-auto"
                                 error={!!cnicError}
                                 helperText={cnicError}
                                 id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" />
@@ -116,7 +109,11 @@ const Applicant = () => {
                                 multiline
                                 maxRows={5}
                                 value={des}
-                                onChange={e => setDes(e.target.value)}
+                                onChange={(e) => {
+                                    validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                    setDes(e.target.value)
+                                }}
                                 variant="standard"
                                 className="col-md-12 col-12 mx-auto "
                                 helperText={desError}
