@@ -6,10 +6,13 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { removeLocalStorage, setLocalStorage, validateName,validateEmail, getLocalStorage } from '../utils/utils';
+import { removeLocalStorage, validateInput} from '../utils/utils';
 import Input from "./Input";
 import { AuthContext } from '../context/Auth';
 import { localStorageKeys } from '../utils/constant';
+import Input from "./Input";
+import { fNameSchema, lNameSchema, passwordSchema } from '../utils/validation';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
@@ -17,36 +20,15 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 const DialogBox = (props) => {
     const { writeUserData, preUser,setToken,setUser } = useContext(AuthContext);
 
-    const [fname, setFName] = React.useState(null)
-    const [lname, setLName] = React.useState(null);
-    const [email, setEmail] = useState(null);
+    const [fname, setFName] = React.useState("")
+    const [lname, setLName] = React.useState("");
+    const [password, setPassword] = React.useState("");
+
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
     const [emailError, setEmailError] = useState("")
 
-    useEffect(() => {
-        if (fname !== null) {
-
-            const error = validateName("First Name", fname);
-            setErrorFirstName(error)
-        }
-    }, [fname])
-
-    useEffect(() => {
-        if (lname !== null) {
-
-            const error = validateName("Last Name", lname);
-            setErrorLastName(error)
-        }
-    }, [lname])
-
-    useEffect(() => {
-        if (email !== null) {
-            const error = validateEmail(email);
-            setEmailError(error)
-
-        }
-    }, [email])
+    
 
     const info = () => {
         if (preUser) {
@@ -77,33 +59,33 @@ const DialogBox = (props) => {
                                     value={fname}
                                     placeholder="First Name"
                                     id="firstName"
-                                    onChange={(v) => {
-                                        setFName(v);
-
-                                    }} />
+                                    onChange={(e) => {
+                                        validateInput(fNameSchema, "firstName", e, setErrorFirstName)
+                                        return setFName(e)
+                                    }}
+                                />
 
                                 <Input title="Last Name"
                                     error={errorLastName}
                                     value={lname}
                                     placeholder="Last Name"
                                     id="lastName"
-                                    onChange={(v) => {
-                                        setLName(v);
+                                    onChange={(e) => {
+                                        validateInput(lNameSchema, "lastName", e, setErrorLastName)
+                                        return setLName(e)
+                                    }}
+                                />
 
-                                    }} />
-
-
-
-                                <Input title="Email"
-                                    type="email"
-                                    error={emailError}
-                                    value={email}
-                                    placeholder="Email"
-                                    id="email"
-                                    onChange={(v) => {
-                                        setEmail(v);
-
-                                    }} />
+                                <Input title="Password"
+                                    error={errorTypePass}
+                                    value={password}
+                                    placeholder="Password"
+                                    id="password"
+                                    onChange={(e) => {
+                                        validateInput(passwordSchema, "password", e, setErrorTypePass)
+                                        return setPassword(e)
+                                    }}
+                                />
                             </div>
 
                             <button id="btn1"

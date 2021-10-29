@@ -52,9 +52,10 @@ console.log({userData})
       let object = [];
         if (snapshot.exists()) {
             const snaps = snapshot.val();
-            Object.keys(snaps).forEach((id)=>{
+            object  = Object.keys(snaps).map((id)=>{
+              // console.log("val",id, snaps)
               const data = {...snaps[id], id}
-              object.push(data)
+              return data;
             })
             // console.log("snaps",snaps,snapshot.key)
             setUserData(object)
@@ -67,9 +68,10 @@ console.log({userData})
     })
 
 }
-useEffect(()=>{database()},[])
 
   useEffect(() => {
+    database();
+
 
     onChildAdded(ref(db, '/users'), (snapshot) => {
       if (snapshot.exists()) {
