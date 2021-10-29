@@ -43,8 +43,11 @@ const Applicant = () => {
 
 
     }
+    console.log({ image })
+    if (image) {
 
-    // console.log({ image : URL?.createObjectURL(image) })
+        console.log({ image: URL.createObjectURL(image) })
+    }
 
     return <>
         <div className="container my-5">
@@ -101,7 +104,7 @@ const Applicant = () => {
                         </div>
                     </div>
                     <div className="row">
-                        <div className="mb-5 col-md-9 col-10 mx-auto">
+                        <div className=" col-md-9 col-10 mx-auto">
                             <TextField
                                 id="standard-multiline-flexible"
                                 label="Your Report"
@@ -121,19 +124,86 @@ const Applicant = () => {
 
                         </div>
                     </div>
-                    {/* <input type="file" accept="image/*"
-                     onChange={(e)=>{
-                         setImage(e.target.files[0])
-                         console.log(e.target.files)
-                     }
-                     } />
-                     {image? 
-                     <img src={URL.createObjectURL(image)} alt="" width="138" /> : 
-                     <></>
-                     
-                    } */}
+                    {/* {file === "missing report" ?
+                        <>
+                            <div className="row my-5">
+                                <div className="col-md-8 col-10 h-100 border mx-auto bg-light d-flex justify-content-center ">
 
-                    <div className="row">
+                                    <label className="text-center pb-5">
+                                        {image ? <></> : <><i class="fas fa-image fa-3x text-danger mt-5"></i> <br />Choose file</>}
+
+                                        <input type="file" accept="image/*"
+                                            style={{ display: 'none' }}
+                                            onChange={(e) => {
+                                                setImage(e.target.files[0])
+                                                console.log(e.target.files)
+                                            }
+                                            } />
+                                        <br />
+                                        {image ?
+                                            <div className="height-12 width-10 border border-secondary card mt-4">
+                                                <img className=" applicant-img" src={URL.createObjectURL(image)} alt="" width="138" /> </div> :
+                                            <></>
+
+                                        }
+                                    </label>
+
+
+
+
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className=" col-md-9 col-10 mx-auto">
+                                    <TextField
+                                        id="standard-multiline-flexible"
+                                        label="Your Report"
+                                        error={!!desError}
+                                        multiline
+                                        maxRows={5}
+                                        value={des}
+                                        onChange={(e) => {
+                                            validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                            setDes(e.target.value)
+                                        }}
+                                        variant="standard"
+                                        className="col-md-12 col-12 mx-auto "
+                                        helperText={desError}
+                                    />
+
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className=" col-md-9 col-10 mx-auto">
+                                    <TextField
+                                        id="standard-multiline-flexible"
+                                        label="Your Report"
+                                        error={!!desError}
+                                        multiline
+                                        maxRows={5}
+                                        value={des}
+                                        onChange={(e) => {
+                                            validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                            setDes(e.target.value)
+                                        }}
+                                        variant="standard"
+                                        className="col-md-12 col-12 mx-auto "
+                                        helperText={desError}
+                                    />
+
+                                </div>
+                            </div>
+
+                        </> : <></>} */}
+
+
+
+
+                    <div className="row mt-5">
                         <div className="col-md-6 col-6 mb-5 mx-auto">
                             <Button onClick={applicantSubmit} className="col-md-12 col-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >
                                 Send

@@ -68,6 +68,7 @@ button {
   height: 700px;
 }
 
+
 .icon-wrap{
   padding: 10px 14px;
   border : 2px solid black;
@@ -140,6 +141,23 @@ button {
   .small-hide{
     display: none;
   }
+}
+.width-10{
+  width: 200px ;
+}
+.height-10{
+  height: 100px;
+}
+
+.height-12{
+  height: 220px;
+}
+
+.applicant-img{
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  width: 100%;
 }
 .height-25{
   height: 250px;
