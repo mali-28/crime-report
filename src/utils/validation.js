@@ -16,6 +16,7 @@ export const lNameSchema = yup.object().shape({
 
 });
 
+<<<<<<< HEAD
 export const emailSchema = yup.object().shape({
 
     email: yup.string()
@@ -37,6 +38,8 @@ export const cnicSchema = yup.object().shape({
 
 });
 
+=======
+>>>>>>> main
 
 export const passwordSchema = yup.object().shape({
 
@@ -47,6 +50,7 @@ export const passwordSchema = yup.object().shape({
 
 });
 
+<<<<<<< HEAD
 export const desSchema = yup.object().shape({
 
     description: yup.string()
@@ -64,4 +68,6 @@ export const phoneSchema = yup.object().shape({
 
 
 });
+=======
+>>>>>>> main
 

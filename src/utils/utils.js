@@ -1,6 +1,5 @@
 import { regPass, regName, regEmail, regCnic } from "./constant";
 
-
 export const validatePhone = (phone) => {
     if (!phone) {
         return "Phone numberis required";
@@ -12,21 +11,21 @@ export const validatePassword = (pass) => {
     const value = typeof pass === "string" ? pass.trim() : "";
     if (!value) {
         return "Password is required";
-    }else if(value.length < 8){
+    } else if (value.length < 8) {
         return "Password should be atleast 8 character";
     }
-    else if(!regPass.test(value)){
+    else if (!regPass.test(value)) {
         return "Password only contains letters, numbers, underscores,  dashes and @";
     }
     return "";
 }
 
 
-export const validateName = (title,name) => {
+export const validateName = (title, name) => {
     const value = typeof name === "string" ? name.trim() : "";
     if (!value) {
         return `${title || "Name"} is required`;
-    }else if(!regName.test(value)){
+    } else if (!regName.test(value)) {
         return "Enter alphabetric name";
     }
     return "";
@@ -81,17 +80,17 @@ export const toCapitalize = (val) =>{
     return "";
 } 
 
-export const getLocalStorage = (key) =>{
-    if(key){
+export const getLocalStorage = (key) => {
+    if (key) {
         const data = localStorage.getItem(key);
-        if(data){
+        if (data) {
             return JSON.parse(data);
         }
     }
 }
 
-export const removeLocalStorage = (key) =>{
-    if(key){
+export const removeLocalStorage = (key) => {
+    if (key) {
         localStorage.removeItem(key)
     }
 }

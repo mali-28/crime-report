@@ -26,7 +26,6 @@ const DialogBox = (props) => {
 
     const info = () => {
         if (preUser) {
-            console.log({preUser})
             const { id, token, phone } = preUser;
             const data = { phone, token, fname, lname, email }
 

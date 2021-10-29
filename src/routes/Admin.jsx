@@ -22,7 +22,10 @@ const Admin = () => {
     }
   }, [user, token])
 
+
+
   const handleVerification = (id) => {
+
     get(child(dbRef, `users/${id}`)).then((snapshot) => {
       if (snapshot.exists()) {
         const user = snapshot.val();
@@ -33,13 +36,15 @@ const Admin = () => {
         console.log("No data available");
       }
     }).catch((error) => {
-      console.error(error);
+      console.error(error.message);
     });
 
   }
 
+  
   return <>
     <div className="container my-4">
+
       <FormControl variant="standard" sx={{ m: "10 auto", minWidth: 120 }}>
         <InputLabel id="demo-simple-select-standard-label">Admin</InputLabel>
         <Select
