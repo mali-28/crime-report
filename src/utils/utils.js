@@ -1,4 +1,4 @@
-import { regPass, regName } from "./constant";
+import { regPass, regName, regEmail } from "./constant";
 
 export const validatePhone = (phone) => {
     if (!phone) {
@@ -9,7 +9,6 @@ export const validatePhone = (phone) => {
 
 export const validatePassword = (pass) => {
     const value = typeof pass === "string" ? pass.trim() : "";
-    console.log("length", value.length)
     if (!value) {
         return "Password is required";
     } else if (value.length < 8) {
@@ -33,11 +32,21 @@ export const validateName = (title, name) => {
 }
 
 
-export const setLocalStorage = (key, value) => {
-    if (key && value) {
-        localStorage.setItem(key, JSON.stringify(value))
+export const validateEmail = (email) => {
+    const value = typeof email === "string" ? email.trim() : "";
+    if (!value) {
+      return "Email is required";
+    } else if (!regEmail.test(value)) {
+      return "Please Enter valid Email";
     }
-
+    return "";
+  };
+  
+export const setLocalStorage = (key,value)=>{
+     if(key && value){
+         localStorage.setItem(key, JSON.stringify(value))
+     }
+    
 }
 
 export const getLocalStorage = (key) => {

@@ -6,3 +6,4 @@ export const localStorageKeys = {
 
 export const regPass = /^[A-Za-z0-9-_@$]*$/;
 export const regName =  /[a-zA-Z]/;
+export const regEmail = /^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/;
