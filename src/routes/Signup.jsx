@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { getAuth, RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import DialogBox from "../components/DialogBox";
+import { getLocalStorage, setLocalStorage, validatePhone, confirmSignIn } from "../utils/utils";
+import { localStorageKeys } from "../utils/constant";
+import Auth, { AuthContext } from "../context/Auth";
 import Input from "../components/Input";
+
 const auth = getAuth();
 let recaptchaVerifier;
 
 const SignUp = () => {
+    const { token, user, preUser, setPreUser } = useContext(AuthContext);
+    const [phone, setPhone] = useState("");
+    const [open, setOpen] = useState(false);
+    const [errorTypePhone, setErrorTypePhone] = useState("");
+    const [valid, setValid] = useState("");
     const [input, setInput] = useState({
         fname: "",
         lname: "",
@@ -20,11 +30,38 @@ const SignUp = () => {
     })
 
 
+    
+
     useEffect(() => {
         getRecaptcha();
     }, [])
 
+    // Example starter JavaScript for disabling form submissions if there are invalid fields
+    useEffect(() => {
 
+        if (preUser) {
+            setOpen(true);
+        }
+
+    }, [preUser])
+
+    const handle = () => {
+        setOpen(pre => !pre)
+    };
+
+    const Event = (e) => {
+        const { value } = e.target;
+        setPhone(value)
+        const passError = validatePhone(value);
+
+        if (passError) {
+            setErrorTypePhone(passError);
+            setValid("is-invalid")
+        } else {
+            setErrorTypePhone("");
+            setValid("is-valid");
+        }
+    }
 
     const getRecaptcha = () => {
         try {
@@ -36,15 +73,16 @@ const SignUp = () => {
     }
 
     const click = () => {
-        signInWithPhoneNumber(auth, "+" + input.phone, recaptchaVerifier).then(function (e) {
-        
 
+        signInWithPhoneNumber(auth, "+" + phone, recaptchaVerifier).then(function (e) {
 
             var code = prompt('Enter code that you recieved ', '');
 
-
             if (code === null) return;
+ 
+            confirmSignIn(e,code, handle, setLocalStorage, localStorageKeys);
 
+            
 
             e.confirm(code).then(function (result) {
                 
@@ -57,42 +95,40 @@ const SignUp = () => {
 
         })
             .catch(function (error) {
-                console.error('error on sign in method fail', error);
-
+                alert(error.message);
             });
 
     }
-    return <>
-        <div className="my-5 mx-auto" style={{ width: "450px" }}>
-            <div className="form-row">
-                <Input name="fname" onChange={Event} title="First Name" value={input.fname}/>
-                <Input name="lname" onChange={Event} title="Last Name" value={input.lname}/>
-                <Input name="phone" onChange={Event} type="tel" title="Phone" value={input.phone}/>
-                <div className="mb-3">
-                    <label htmlFor="validationCustom01">First name</label>
-                    <input name="fname" onChange={Event} type="text" className="form-control vw-90" id="validationCustom01" placeholder="First name" value={input.fname} required />
 
-                </div>
-                <div className="mb-3">
-                    <label htmlFor="validationCustom02">Last name</label>
-                    <input name="lname" onChange={Event} type="text" className="form-control" id="validationCustom02" placeholder="Last name" value={input.lname} required />
 
-                </div>
-                <div className=" mb-3">
-                    <label htmlFor="validationCustomPhone">Phone</label>
-                    <input name="phone" onChange={Event} type="number" className="form-control" id="validationCustomPhone" placeholder="923****" value={input.phone} required />
+return <>
+    <div className="my-5 mx-auto" style={{ width: "450px" }}>
+        <div className="form-row">
+            <Input name="fname" onChange={Event} title="First Name" value={input.fname}/>
+            <Input name="lname" onChange={Event} title="Last Name" value={input.lname}/>
+            <Input name="phone" onChange={Event} type="tel" title="Phone" value={input.phone}/>
+            <div className="mb-3">
+                <label htmlFor="validationCustom01">First name</label>
+                <input name="fname" onChange={Event} type="text" className="form-control vw-90" id="validationCustom01" placeholder="First name" value={input.fname} required />
 
-                </div>
+            <div className="mb-3">
+                <label htmlFor="validationCustomPhone">Phone</label>
+                <input name="phone" onChange={Event} type="number" className={`form-control ${valid}`} id="validationCustomPhone" placeholder="923****" value={phone} />
+                <div className="invalid-feedback">{errorTypePhone}</div>
             </div>
-            <div id="recaptcha" ></div>
-
-            <button id="btn1"
-                onClick={click}
-                className="btn btn-primary">Submit form</button>
-
         </div>
-        <p></p>
-    </>
+        <div id="recaptcha" ></div>
+
+        <button id="btn1"
+            disabled={!!errorTypePhone || !phone}
+            onClick={click}
+            className="btn btn-primary mt-2">Submit form</button>
+    </div>
+    </div>
+    <button onClick={handle}>handle</button>
+    <DialogBox handle={handle} open={open} />
+</>
+   
 }
 
 export default SignUp;

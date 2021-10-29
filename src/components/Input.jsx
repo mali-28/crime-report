@@ -1,9 +1,17 @@
-const Input = (props) => {
+
+const Input = ({ title, error, onChange, ...props }) => {
     return <>
         <div className="mb-3">
-            <label htmlFor={props.name}>{props.title}</label>
-            <input name={props.name} onChange={props.onChange} type={props.type || "text"} className="form-control vw-90" id={props.name} placeholder={props.title} value={props.value} required />
+            <label htmlFor={props.id}>{title}</label>
+            <input onChange={(e)=>{
+                onChange(e.target.value)
+            }} 
+            type={props.type || "text"} 
+            className={`form-control ${!error ? "is-valid" : "is-invalid"}`} id={props.id} value={props.value} placeholder={props.placeholder} required />
+            <div className="invalid-feedback">{error}</div>
 
-        </div></>
+        </div>
+    </>
 }
+
 export default Input;
