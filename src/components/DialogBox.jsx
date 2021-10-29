@@ -1,12 +1,6 @@
-import React, { useContext, useEffect, useState } from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import Slide from '@mui/material/Slide';
+import React, { useContext, useState } from 'react';
 import { removeLocalStorage, validateInput} from '../utils/utils';
+import {Dialog,DialogContent,DialogContentText,DialogTitle,Slide} from '@mui/material';
 import Input from "./Input";
 import { AuthContext } from '../context/Auth';
 import { localStorageKeys } from '../utils/constant';

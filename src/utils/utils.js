@@ -1,4 +1,4 @@
-import { regPass, regName, regEmail } from "./constant";
+import { regPass, regName, regEmail, regCnic } from "./constant";
 
 export const validatePhone = (phone) => {
     if (!phone) {
@@ -31,6 +31,15 @@ export const validateName = (title, name) => {
     return "";
 }
 
+export const validateCnic = (cnic) =>{
+    if(!cnic){
+        return "Cnic number is required"
+    }else if(!regCnic.test(cnic)){
+        return "Cnic number must follow the xxxxx-xxxxxxx-x format"
+    }
+    return ""
+} 
+
 
 export const validateEmail = (email) => {
     const value = typeof email === "string" ? email.trim() : "";
@@ -41,6 +50,19 @@ export const validateEmail = (email) => {
     }
     return "";
   };
+
+  export const validateDes = (des) =>{
+      console.log("type", typeof des)
+    const value = typeof des === "string" ? des.trim() : "";
+      console.log({val: value?.length})
+    if (!value) {
+        return "Description is required";
+      } else if (value.length < 30) {
+        return "Description should contains atleast 30 characters";
+      }
+      return "";
+
+  }
   
 export const setLocalStorage = (key,value)=>{
      if(key && value){
@@ -48,6 +70,14 @@ export const setLocalStorage = (key,value)=>{
      }
     
 }
+export const toCapitalize = (val) =>{
+    if(val){
+        const name = val[0].toUpperCase() + val.slice(1,val.length)
+
+        return name;
+    }
+    return "";
+} 
 
 export const getLocalStorage = (key) => {
     if (key) {
