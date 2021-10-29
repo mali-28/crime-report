@@ -1,5 +1,5 @@
 import "./firebase";
-import { Switch, BrowserRouter, Route, Link } from "react-router-dom";
+import { Switch, BrowserRouter, Route, Redirect} from "react-router-dom";
 import Topbar from './components/TopBar';
 import Home from './routes/Home';
 import Signup from "./routes/Signup";
@@ -15,9 +15,10 @@ function App() {
           <Route exact path="/">
             <Home />
           </Route>
-          <Route exact path="/login">
+          <Route exact path="/signup">
             <Signup/>
           </Route>
+          <Redirect to="/"/>
         </Switch>
         <Footer/>
         </Auth>

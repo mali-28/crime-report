@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
@@ -6,15 +6,19 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import Slide from '@mui/material/Slide';
-import { validateName, validatePassword ,validateInput} from '../utils/utils';
+import { removeLocalStorage, validateInput} from '../utils/utils';
 import Input from "./Input";
-
+import  { AuthContext } from '../context/Auth';
+import { localStorageKeys } from '../utils/constant';
+import Input from "./Input";
 import { fNameSchema, lNameSchema, passwordSchema } from '../utils/validation';
+
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
+    const {writeUserData,preUser} = useContext(AuthContext);
 
     const [fname, setFName] = React.useState("")
     const [lname, setLName] = React.useState("");
@@ -24,29 +28,20 @@ const DialogBox = (props) => {
     const [errorLastName, setErrorLastName] = useState("");
     const [errorTypePass, setErrorTypePass] = useState("");
 
-    // useEffect(() => {
-    //     if (fname !== null) {
-    //         const error = validateName("First Name", fname);
-    //        setErrorFirstName(error)
-    //     }
-    // }, [fname])
+    
 
-    // useEffect(() => {
-    //     if (lname !== null) {
+    const info = () =>{
+        console.log("re",preUser)
+        if(preUser){
+            const {id, ...remaining} = preUser
+            writeUserData("users",id, {...remaining, fname, lname, password})
+            removeLocalStorage(localStorageKeys.preUser);
+        
 
-    //         const error = validateName("Last Name", lname);
-    //         setErrorLastName(error)
+        }
+        props.handle();
 
-    //     }
-    // }, [lname])
-
-    // useEffect(() => {
-    //     if (password !== null) {
-    //         const error = validatePassword(password);
-    //          setErrorTypePass(error)
-
-    //     }
-    // }, [password])
+    }
 
     return <>
 
@@ -99,7 +94,7 @@ const DialogBox = (props) => {
 
                             <button id="btn1"
                                 disabled={!!errorFirstName || !!errorLastName || !!errorTypePass || !fname || !lname || !password}
-                                onClick={props.handle}
+                                onClick={info}
                                 className="btn btn-success mt-2">Submit form</button>
                         </div>
                     </DialogContentText>
