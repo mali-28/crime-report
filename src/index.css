@@ -12,7 +12,7 @@
   align-items: center;
 }
 
-.card {
+.home-card{
   width: 500px;
   height: 500px;
   background-color: greenyellow;
@@ -30,15 +30,16 @@
 }
 
 button {
-  padding: 16px 20px;
+  /* padding: 16px 20px;
+  margin: 5px;
   font-size: 20px;
-  border-radius: 10px;
-  box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.2);
+  border-radius: 10px; */
+  box-shadow: 1px 1px 5px 0px rgba(0,0,0,0.2);
 }
 
-button:focus {
+/* button:focus {
   outline: none;
-}
+} */
 
 .active{
   color: #ac0606 !important;
@@ -67,6 +68,7 @@ button:focus {
   height: 700px;
 }
 
+
 .icon-wrap{
   padding: 10px 14px;
   border : 2px solid black;
@@ -86,6 +88,52 @@ button:focus {
   color: #ccc;
 }
 
+.c-details span {
+  font-weight: 300;
+  font-size: 13px
+}
+
+.card-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #eee;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 39px
+}
+
+.badge span {
+  background-color: #fff9e4;
+  width: 100px;
+  height: 25px;
+  padding-bottom: 3px;
+  border-radius: 5px;
+  display: flex;
+  color: #ff0505;
+  justify-content: center;
+  align-items: center
+}
+
+.progress {
+  height: 10px;
+  border-radius: 10px
+}
+
+.progress div {
+  background-color: red
+}
+
+.text1 {
+  font-size: 14px;
+  font-weight: 600
+}
+
+.text2 {
+  color: #a5aec0
+}
+
 .invalid-feedback {
   display: block !important;
 }
@@ -93,4 +141,32 @@ button:focus {
   .small-hide{
     display: none;
   }
+}
+.width-10{
+  width: 200px ;
+}
+.height-10{
+  height: 100px;
+}
+
+.height-12{
+  height: 220px;
+}
+
+.applicant-img{
+  display: inline-block;
+  vertical-align: middle;
+  height: 100%;
+  width: 100%;
+}
+.height-25{
+  height: 250px;
+}
+.case-content{
+  border-top: 2px solid #fa8686 !important;
+  height: 150px !important;
+  overflow-y: auto;
+}
+.font-014{
+  font-size: 14px;
 }

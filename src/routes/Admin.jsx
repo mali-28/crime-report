@@ -1,23 +1,20 @@
 import React, { useContext, useState, useEffect } from "react"
 import { getDatabase, ref, set, get, child } from "firebase/database";
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import { Select, Alert } from '@mui/material';
+import { InputLabel, MenuItem, FormControl, Select, Alert } from '@mui/material';
 import { useHistory } from "react-router-dom";
 import { AuthContext } from "../context/Auth";
-import AdminTable from "../components/AdminTable";
-
+import Table from "../tables/AdminTable";
+import "../css/admin.css";
 
 const Admin = () => {
 
   const { user, token, userData } = useContext(AuthContext);
-  const history = useHistory();
-  const db = getDatabase();
-  const dbRef = ref(getDatabase());
   const [value, setValue] = useState(true);
   let isData = false;
 
+  const history = useHistory();
+  const db = getDatabase();
+  const dbRef = ref(getDatabase());
 
   useEffect(() => {
     if (!user || !token) {
@@ -62,36 +59,42 @@ const Admin = () => {
         </Select>
       </FormControl>
 
-      <div className="table-responsive ">
-        <table className="table ">
-          <thead>
-            <tr>
-              <th scope="col">#Id</th>
-              <th scope="col">Name</th>
-              <th scope="col">Email</th>
-              <th scope="col">Phone Number</th>
-              <th scope="col">Status</th>
-              <th scope="col">Manage Status</th>
-            </tr>
-          </thead>
-          <tbody>
+      <div className="row mt-4">
+        <div className="col-lg-12">
+          <div className="main-box clearfix">
+            <div className="table-responsive">
+              <table className="table admin-table  user-list">
+                <thead>
+                  <tr>
+                    <th><span>Phone</span></th>
+                    <th><span>Created</span></th>
+                    <th className="text-center"><span>Status</span></th>
+                    <th><span>Email</span></th>
+                    <th>&nbsp;</th>
+                  </tr>
+                </thead>
+                <tbody>
 
-            {userData?.map((val) => {
-              if (val.isAdmin && value) {
-                isData = true;
-                return <AdminTable key={val.id} color="error" val={val} title="Make User" onClick={(key) => { handleVerification(key) }} />
+                  {userData?.map((val) => {
+                    if (val.isAdmin && value) {
+                      isData = true;
+                      return <Table key={val.id} color="error" val={val} title="Make User" onClick={handleVerification} />
 
-              } else if (!val.isAdmin && !value) {
-                isData = true;
-                return <AdminTable key={val.id} color="success" val={val} title="Make Admin" onClick={(key) => { handleVerification(key) }} />
-              }
+                    } else if (!val.isAdmin && !value) {
+                      isData = true;
+                      return <Table key={val.id} color="success" val={val} title="Make Admin" onClick={handleVerification} />
+                    }
 
-            })
-            }
-            {isData ? <></> : <tr><td colSpan="6"> <Alert severity="error">No data found</Alert> </td></tr>}
+                  })
+                  }
+                  {isData ? <></> : <tr><td colSpan="6"> <Alert severity="error">No data found</Alert> </td></tr>}
 
-          </tbody>
-        </table>
+
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 

@@ -1,11 +1,12 @@
 import { useContext, useEffect, useState } from "react";
 import { InputLabel, TextField, FormControl, MenuItem, Select, Button } from '@mui/material';
-import { getDatabase, ref, set,} from "firebase/database";
+import { getDatabase, ref, set, } from "firebase/database";
 import NumberFormat from 'react-number-format';
 import { cities, reports } from "../utils/constant";
-import { toCapitalize, validateCnic, validateDes } from "../utils/utils";
+import { toCapitalize, validateInput } from "../utils/utils";
 import { AuthContext } from "../context/Auth";
 import { toast } from "react-toastify";
+import { cnicSchema, desSchema } from "../utils/validation";
 
 
 const Applicant = () => {
@@ -13,45 +14,39 @@ const Applicant = () => {
     const { user, token } = useContext(AuthContext)
     const [city, setCity] = useState(cities?.[0].value)
     const [file, setFile] = useState(reports?.[0].value)
-    const [cnic, setCnic] = useState(null)
-    const [des, setDes] = useState(null)
+    const [cnic, setCnic] = useState("")
+    const [des, setDes] = useState("")
+    const [image, setImage] = useState("")
     const [cnicError, setCnicError] = useState("")
     const [desError, setDesError] = useState("")
 
 
-    useEffect(() => {
-        if (cnic !== null) {
-            const error = validateCnic(cnic)
-            setCnicError(error)
-        }
-    }, [cnic])
-
-    useEffect(() => {
-        if (des !== null) {
-            const error = validateDes(des)
-            setDesError(error)
-        }
-    }, [des])
 
     const applicantSubmit = () => {
         if (user && token) {
             const id = `${new Date().getTime()}_${user.id}`;
             set(ref(db, `application/${id}`), {
-                cnic,des,city, file, status : "pending", res: "", date : new Date().toDateString()
+                cnic, des, city, file, status: "pending", res: ""
             }).then(() => {
                 setCnic("");
                 setDes("");
                 setCnicError("")
                 setDesError("")
-                  toast.success(`${toCapitalize(user.fname) } ${toCapitalize(user.lname)} your request has been submitted!`);
+                toast.success(`${toCapitalize(user.fname)} ${toCapitalize(user.lname)} your request has been submitted!`);
             })
                 .catch((error) => {
-                    toast.warning(error.message);
+                    // console.log({error})
+                    toast.warning("Server Error! Please try Again Later");
 
                 });
         }
 
 
+    }
+    console.log({ image })
+    if (image) {
+
+        console.log({ image: URL.createObjectURL(image) })
     }
 
     return <>
@@ -99,14 +94,17 @@ const Applicant = () => {
                     </div>
                     <div className="row">
                         <div className="mb-3  col-md-9 col-10 mx-auto">
-                            <NumberFormat onChange={e => setCnic(e.target.value)} value={cnic} className="col-md-12 col-12 mx-auto"
+                            <NumberFormat onChange={(e) => {
+                                validateInput(cnicSchema, "cnic", e.target.value, setCnicError)
+                                setCnic(e.target.value)
+                            }} value={cnic} className="col-md-12 col-12 mx-auto"
                                 error={!!cnicError}
                                 helperText={cnicError}
-                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_"/>
+                                id="cnic" customInput={TextField} variant="standard" label="CNIC" format="#####-#######-#" mask="_" />
                         </div>
                     </div>
                     <div className="row">
-                        <div className="mb-5 col-md-9 col-10 mx-auto">
+                        <div className=" col-md-9 col-10 mx-auto">
                             <TextField
                                 id="standard-multiline-flexible"
                                 label="Your Report"
@@ -114,7 +112,11 @@ const Applicant = () => {
                                 multiline
                                 maxRows={5}
                                 value={des}
-                                onChange={e => setDes(e.target.value)}
+                                onChange={(e) => {
+                                    validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                    setDes(e.target.value)
+                                }}
                                 variant="standard"
                                 className="col-md-12 col-12 mx-auto "
                                 helperText={desError}
@@ -122,7 +124,86 @@ const Applicant = () => {
 
                         </div>
                     </div>
-                    <div className="row">
+                    {/* {file === "missing report" ?
+                        <>
+                            <div className="row my-5">
+                                <div className="col-md-8 col-10 h-100 border mx-auto bg-light d-flex justify-content-center ">
+
+                                    <label className="text-center pb-5">
+                                        {image ? <></> : <><i class="fas fa-image fa-3x text-danger mt-5"></i> <br />Choose file</>}
+
+                                        <input type="file" accept="image/*"
+                                            style={{ display: 'none' }}
+                                            onChange={(e) => {
+                                                setImage(e.target.files[0])
+                                                console.log(e.target.files)
+                                            }
+                                            } />
+                                        <br />
+                                        {image ?
+                                            <div className="height-12 width-10 border border-secondary card mt-4">
+                                                <img className=" applicant-img" src={URL.createObjectURL(image)} alt="" width="138" /> </div> :
+                                            <></>
+
+                                        }
+                                    </label>
+
+
+
+
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className=" col-md-9 col-10 mx-auto">
+                                    <TextField
+                                        id="standard-multiline-flexible"
+                                        label="Your Report"
+                                        error={!!desError}
+                                        multiline
+                                        maxRows={5}
+                                        value={des}
+                                        onChange={(e) => {
+                                            validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                            setDes(e.target.value)
+                                        }}
+                                        variant="standard"
+                                        className="col-md-12 col-12 mx-auto "
+                                        helperText={desError}
+                                    />
+
+                                </div>
+                            </div>
+
+                            <div className="row">
+                                <div className=" col-md-9 col-10 mx-auto">
+                                    <TextField
+                                        id="standard-multiline-flexible"
+                                        label="Your Report"
+                                        error={!!desError}
+                                        multiline
+                                        maxRows={5}
+                                        value={des}
+                                        onChange={(e) => {
+                                            validateInput(desSchema, "description", e.target.value, setDesError)
+
+                                            setDes(e.target.value)
+                                        }}
+                                        variant="standard"
+                                        className="col-md-12 col-12 mx-auto "
+                                        helperText={desError}
+                                    />
+
+                                </div>
+                            </div>
+
+                        </> : <></>} */}
+
+
+
+
+                    <div className="row mt-5">
                         <div className="col-md-6 col-6 mb-5 mx-auto">
                             <Button onClick={applicantSubmit} className="col-md-12 col-12 mx-auto" variant="contained" disabled={!cnic || !des || cnicError || desError} >
                                 Send

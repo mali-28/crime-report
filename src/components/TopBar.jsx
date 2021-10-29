@@ -3,7 +3,7 @@ import  "bootstrap/dist/css/bootstrap.min.css";
 import  "bootstrap/dist/js/bootstrap.bundle.js";
 import { useHistory } from 'react-router-dom';
 import { NavLink } from 'react-router-dom';
-import {Select, Button,Stack} from '@mui/material';
+import {Button} from '@mui/material';
 
 import { removeLocalStorage } from '../utils/utils';
 import { localStorageKeys } from '../utils/constant';
@@ -21,7 +21,7 @@ const Topbar = () =>{
       }
   return <nav className="navbar navbar-expand-lg navbar-light bg-light">
     <div className="container">
-      <img className="logo" src="./images/logo1.jfif" alt="logo"/>
+      <img className="logo" src="/images/logo1.jfif" alt="logo"/>
       <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false" aria-label="Toggle navigation">
         <span className="navbar-toggler-icon"></span>
       </button>
@@ -43,12 +43,20 @@ const Topbar = () =>{
           </li>
 
           <li className="nav-item">
-            <NavLink  to="/request" activeClassName="active" className="nav-link">Request</NavLink>
+            <NavLink  to="/requests" activeClassName="active" className="nav-link">Request</NavLink>
           </li>
 
           <li className="nav-item">
-          <Button variant="text" onClick={()=>{Logout()}} color="success">Logout</Button>
+            <NavLink  to="/myapplication" activeClassName="active" className="nav-link">Application</NavLink>
           </li>
+
+          <li className="nav-item">
+            <NavLink  to="/case" activeClassName="active" className="nav-link">Cases</NavLink>
+          </li>
+
+          {/* <li className="nav-item">
+          <Button variant="text" onClick={()=>{Logout()}} color="success">Logout</Button>
+          </li> */}
         </ul>
         <form className="d-flex">
           <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search"/>

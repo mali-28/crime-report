@@ -13,7 +13,6 @@ const obj = {
   setPreUser: () => { },
   userData: [],
   setUserData: () => { },
-  writeUserData: () => { },
 }
 
 
@@ -26,24 +25,7 @@ const Auth = (props) => {
   const [userData, setUserData] = useState([]);
 
 
-// console.log({userData})
-  const writeUserData = (title, userId, data) => {
 
-    set(ref(db, `${title}/` + userId), {
-      ...data, isAdmin : false, isSuperAdmin : false
-    }).then(() => {
-      const { token, ...remaining } = data;
-      setLocalStorage(localStorageKeys.token, token)
-      setToken(getLocalStorage(localStorageKeys.token));
-      setLocalStorage(localStorageKeys.user, {...remaining, id : userId})
-      toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
-    })
-    .catch((error) => {
-      toast.danger(error.message);
-
-    });
-   
-  }
 
   const database =  () =>{
     const dbRef = ref(getDatabase());
@@ -51,24 +33,24 @@ const Auth = (props) => {
       let object = [];
         if (snapshot.exists()) {
             const snaps = snapshot.val();
-            object  = Object.keys(snaps).map((id)=>{
-              // console.log("val",id, snaps)
+            object = Object.keys(snaps).map((id)=>{
               const data = {...snaps[id], id}
               return data;
             })
-            // console.log("snaps",snaps,snapshot.key)
             setUserData(object)
             
+        } else {
+          setUserData({})
         }
     }).catch((error) => {
-      toast.danger(error);
+      toast.error("Please Check your Connection");
     })
 
 }
 
   useEffect(() => {
+    
     database();
-
 
     onChildAdded(ref(db, '/users'), (snapshot) => {
       if (snapshot.exists()) {
@@ -78,7 +60,7 @@ const Auth = (props) => {
         })
 
       } else {
-        toast.danger("Some internal problem exists.Please try again later");
+        toast.error("Some server problem exists.Please try again later");
       }
     });
 
@@ -102,7 +84,7 @@ const Auth = (props) => {
 
   }, [])
 
-  return <><AuthContext.Provider value={{token, setToken, user, setUser, preUser, setPreUser, writeUserData,userData }}>
+  return <><AuthContext.Provider value={{token, setToken, user, setUser, preUser, setPreUser,userData }}>
     {props.children}
   </AuthContext.Provider></>
 

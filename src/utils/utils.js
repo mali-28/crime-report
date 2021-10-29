@@ -40,7 +40,6 @@ export const validateCnic = (cnic) =>{
     return ""
 } 
 
-
 export const validateEmail = (email) => {
     const value = typeof email === "string" ? email.trim() : "";
     if (!value) {
@@ -50,6 +49,7 @@ export const validateEmail = (email) => {
     }
     return "";
   };
+
 
   export const validateDes = (des) =>{
       console.log("type", typeof des)
@@ -70,6 +70,7 @@ export const setLocalStorage = (key,value)=>{
      }
     
 }
+
 export const toCapitalize = (val) =>{
     if(val){
         const name = val[0].toUpperCase() + val.slice(1,val.length)
@@ -93,6 +94,7 @@ export const removeLocalStorage = (key) => {
         localStorage.removeItem(key)
     }
 }
+ 
 
 export const validateInput = (schema, name, e, setterFunction) => {
     if (schema && name && setterFunction){
@@ -107,12 +109,3 @@ export const validateInput = (schema, name, e, setterFunction) => {
         }
 }
 
-export const confirmSignIn = (e,code, handle, setStorage, keys) => {
-    e.confirm(code).then(function (result) {
-        handle();
-        const res = result.user
-        setStorage(keys.preUser, { id: res.id, phone: res.phone, token: res.accessToken })
-    }).catch(function (error) {
-        alert(error.message);
-    });
-}

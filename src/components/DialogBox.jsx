@@ -1,34 +1,52 @@
 import React, { useContext, useState } from 'react';
-import { removeLocalStorage, validateInput} from '../utils/utils';
-import {Dialog,DialogContent,DialogContentText,DialogTitle,Slide} from '@mui/material';
+import { getDatabase, ref, set } from "firebase/database";
+import { Dialog, DialogContent, DialogContentText, DialogTitle, Slide } from '@mui/material';
+import { toast } from "react-toastify";
+import { removeLocalStorage, setLocalStorage, getLocalStorage, validateInput } from '../utils/utils';
 import Input from "./Input";
 import { AuthContext } from '../context/Auth';
 import { localStorageKeys } from '../utils/constant';
-import Input from "./Input";
-import { fNameSchema, lNameSchema, passwordSchema } from '../utils/validation';
+import { fNameSchema, lNameSchema, emailSchema } from '../utils/validation';
+
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="down" ref={ref} {...props} />;
 });
 
 const DialogBox = (props) => {
-    const { writeUserData, preUser,setToken,setUser } = useContext(AuthContext);
-
+    const { preUser, setToken, setUser } = useContext(AuthContext);
+    const db = getDatabase();
     const [fname, setFName] = React.useState("")
     const [lname, setLName] = React.useState("");
-    const [password, setPassword] = React.useState("");
-
+    const [email, setEmail] = useState("");
     const [errorFirstName, setErrorFirstName] = useState("");
     const [errorLastName, setErrorLastName] = useState("");
     const [emailError, setEmailError] = useState("")
 
-    
 
     const info = () => {
         if (preUser) {
-            const { id, token, phone } = preUser
-            writeUserData("users", id, { phone, token, fname, lname, email })
-            removeLocalStorage(localStorageKeys.preUser);
+            const { id, token, phone } = preUser;
+            const data = { phone, token, fname, lname, email }
+
+            set(ref(db, `users/` + id), {
+                ...data, isAdmin: false, isSuperAdmin: false
+            }).then(() => {
+
+                const { token, ...remaining } = data;
+                setLocalStorage(localStorageKeys.token, token)
+                setToken(getLocalStorage(localStorageKeys.token));
+                setLocalStorage(localStorageKeys.user, { ...remaining, id })
+                setUser(getLocalStorage(localStorageKeys.user))
+                toast.success(`Congratulations👋 ${remaining.fname} ${remaining.lname} Account Created Succesfully!`);
+                removeLocalStorage(localStorageKeys.preUser);
+
+            })
+                .catch((error) => {
+                    toast.danger(error.message);
+
+                });
+
         }
         props.handle();
     }
@@ -53,33 +71,36 @@ const DialogBox = (props) => {
                                     value={fname}
                                     placeholder="First Name"
                                     id="firstName"
-                                    onChange={(e) => {
-                                        validateInput(fNameSchema, "firstName", e, setErrorFirstName)
-                                        return setFName(e)
-                                    }}
-                                />
+                                    onChange={(v) => {
+                                        validateInput(fNameSchema, "firstName", v, setErrorFirstName)
+                                        setFName(v);
+
+                                    }} />
 
                                 <Input title="Last Name"
                                     error={errorLastName}
                                     value={lname}
                                     placeholder="Last Name"
                                     id="lastName"
-                                    onChange={(e) => {
-                                        validateInput(lNameSchema, "lastName", e, setErrorLastName)
-                                        return setLName(e)
-                                    }}
-                                />
+                                    onChange={(v) => {
+                                        validateInput(lNameSchema, "lastName", v, setErrorLastName)
+                                        setLName(v);
 
-                                <Input title="Password"
-                                    error={errorTypePass}
-                                    value={password}
-                                    placeholder="Password"
-                                    id="password"
-                                    onChange={(e) => {
-                                        validateInput(passwordSchema, "password", e, setErrorTypePass)
-                                        return setPassword(e)
-                                    }}
-                                />
+                                    }} />
+
+
+
+                                <Input title="Email"
+                                    type="email"
+                                    error={emailError}
+                                    value={email}
+                                    placeholder="Email"
+                                    id="email"
+                                    onChange={(v) => {
+                                        validateInput(emailSchema, "email", v, setEmailError)
+                                        setEmail(v);
+
+                                    }} />
                             </div>
 
                             <button id="btn1"
